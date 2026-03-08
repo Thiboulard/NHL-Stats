@@ -76,6 +76,26 @@
     .glow-line{height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);margin:2rem 0;opacity:0.3;}
     footer{position:relative;z-index:10;text-align:center;padding:1.5rem;border-top:1px solid rgba(0,180,216,0.1);font-size:0.62rem;color:var(--muted);letter-spacing:0.1em;}
     footer a{color:var(--cyan);text-decoration:none;margin:0 0.5rem;}
+    .combo-intro{font-size:0.68rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6;}
+    .combo-tabs{display:flex;gap:0;border-bottom:1px solid rgba(0,180,216,0.15);margin-bottom:1.5rem;}
+    .combo-tab{background:none;border:none;border-bottom:2px solid transparent;padding:0.6rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);cursor:pointer;transition:all 0.2s;text-transform:uppercase;}
+    .combo-tab:hover{color:var(--text);}
+    .combo-tab.active{color:#fff;}
+    .combo-card{background:rgba(13,27,42,0.7);border:1px solid rgba(0,180,216,0.12);border-radius:5px;padding:1.1rem 1.25rem;margin-bottom:0.85rem;transition:border-color 0.2s;}
+    .combo-card:hover{border-color:rgba(0,180,216,0.3);}
+    .combo-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;}
+    .combo-rank{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--muted);line-height:1;}
+    .combo-probs{display:flex;align-items:baseline;gap:1rem;}
+    .combo-prob-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.03em;line-height:1;}
+    .combo-cote{font-size:0.65rem;color:var(--muted);}
+    .combo-cote strong{color:var(--gold);}
+    .combo-prob-bar{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-bottom:0.85rem;}
+    .combo-prob-fill{height:100%;border-radius:2px;transition:width 0.9s ease;}
+    .combo-players{display:flex;flex-wrap:wrap;gap:0.5rem;}
+    .combo-player{background:rgba(0,0,0,0.3);border:1px solid rgba(0,180,216,0.1);border-radius:3px;padding:0.3rem 0.6rem;display:flex;align-items:center;gap:0.5rem;}
+    .combo-pname{font-size:0.7rem;color:#fff;font-weight:600;}
+    .combo-pteam{font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;}
+    .combo-pprob{font-size:0.65rem;font-weight:600;}
     @keyframes fadeIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
   </style>
 </head>
@@ -88,7 +108,7 @@
     <div class="puck"></div>
   </div>
   <p class="tagline">Analyse automatique · Probabilites Poisson · Top 20 joueurs du jour</p>
-  <p class="meta-info">Mis a jour le <strong>08/03/2026 a 20:20</strong> · Matchs : <strong>7</strong></p>
+  <p class="meta-info">Mis a jour le <strong>08/03/2026 a 20:31</strong> · Matchs : <strong>7</strong></p>
   
     <div class="global-rate">
       <div class="global-rate-label">TAUX DE REUSSITE GLOBAL</div>
@@ -115,6 +135,7 @@
 <main>
   <div class="tabs">
     <button class="tab-btn active" onclick="showTab(this,'tab-today')">Aujourd hui</button>
+    <button class="tab-btn" onclick="showTab(this,'tab-combines')">Combines</button>
     <button class="tab-btn" onclick="showTab(this,'tab-history')">Historique</button>
   </div>
 
@@ -478,6 +499,210 @@
     </div>
   </div>
 
+  <!-- ONGLET COMBINES -->
+  <div class="tab-content" id="tab-combines">
+    
+    <div class="section-title" style="margin-top:1.5rem">Combines du jour</div>
+    <p class="combo-intro">Combines optimaux issus du Top 20 · Pas deux joueurs du meme match · Probabilites independantes</p>
+    <div class="combo-tabs"><button class="combo-tab active" data-panel="combo-2" onclick="showCombo(this)" style="border-bottom-color:var(--cyan)">Double</button><button class="combo-tab " data-panel="combo-3" onclick="showCombo(this)" style="border-bottom-color:transparent">Triple</button><button class="combo-tab " data-panel="combo-4" onclick="showCombo(this)" style="border-bottom-color:transparent">Quadruple</button></div>
+    <div class="combo-panels"><div class="combo-panel" id="combo-2" style="display:block">
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#1</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#00b4d8">73.8%</span>
+                      <span class="combo-cote">cote theo. <strong>1.35</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#00b4d8" data-target="73.8"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Leon Draisaitl</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">84.5%</span></div></div>
+                </div>
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#2</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#00b4d8">71.9%</span>
+                      <span class="combo-cote">cote theo. <strong>1.39</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#00b4d8" data-target="71.9"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Evan Bouchard</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">82.3%</span></div></div>
+                </div>
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#3</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#00b4d8">69.7%</span>
+                      <span class="combo-cote">cote theo. <strong>1.43</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#00b4d8" data-target="69.7"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Matt Boldy</span><span class="combo-pteam">MIN</span><span class="combo-pprob" style="color:var(--cyan)">79.8%</span></div></div>
+                </div>
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#4</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#00b4d8">69.7%</span>
+                      <span class="combo-cote">cote theo. <strong>1.43</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#00b4d8" data-target="69.7"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Connor McDavid</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">79.8%</span></div></div>
+                </div>
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#5</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#00b4d8">68.5%</span>
+                      <span class="combo-cote">cote theo. <strong>1.46</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#00b4d8" data-target="68.5"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Kirill Kaprizov</span><span class="combo-pteam">MIN</span><span class="combo-pprob" style="color:var(--cyan)">78.4%</span></div></div>
+                </div></div><div class="combo-panel" id="combo-3" style="display:none">
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#1</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#00b4d8">58.9%</span>
+                      <span class="combo-cote">cote theo. <strong>1.70</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#00b4d8" data-target="58.9"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Leon Draisaitl</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">84.5%</span></div><div class="combo-player"><span class="combo-pname">Matt Boldy</span><span class="combo-pteam">MIN</span><span class="combo-pprob" style="color:var(--cyan)">79.8%</span></div></div>
+                </div>
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#2</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#00b4d8">57.9%</span>
+                      <span class="combo-cote">cote theo. <strong>1.73</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#00b4d8" data-target="57.9"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Leon Draisaitl</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">84.5%</span></div><div class="combo-player"><span class="combo-pname">Kirill Kaprizov</span><span class="combo-pteam">MIN</span><span class="combo-pprob" style="color:var(--cyan)">78.4%</span></div></div>
+                </div>
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#3</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#00b4d8">57.9%</span>
+                      <span class="combo-cote">cote theo. <strong>1.73</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#00b4d8" data-target="57.9"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Leon Draisaitl</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">84.5%</span></div><div class="combo-player"><span class="combo-pname">Quinn Hughes</span><span class="combo-pteam">MIN</span><span class="combo-pprob" style="color:var(--cyan)">78.4%</span></div></div>
+                </div>
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#4</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#00b4d8">57.4%</span>
+                      <span class="combo-cote">cote theo. <strong>1.74</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#00b4d8" data-target="57.4"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Evan Bouchard</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">82.3%</span></div><div class="combo-player"><span class="combo-pname">Matt Boldy</span><span class="combo-pteam">MIN</span><span class="combo-pprob" style="color:var(--cyan)">79.8%</span></div></div>
+                </div>
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#5</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#00b4d8">56.8%</span>
+                      <span class="combo-cote">cote theo. <strong>1.76</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#00b4d8" data-target="56.8"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Leon Draisaitl</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">84.5%</span></div><div class="combo-player"><span class="combo-pname">Nathan MacKinnon</span><span class="combo-pteam">COL</span><span class="combo-pprob" style="color:var(--cyan)">76.9%</span></div></div>
+                </div></div><div class="combo-panel" id="combo-4" style="display:none">
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#1</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#f4a21e">45.3%</span>
+                      <span class="combo-cote">cote theo. <strong>2.21</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="45.3"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Leon Draisaitl</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">84.5%</span></div><div class="combo-player"><span class="combo-pname">Matt Boldy</span><span class="combo-pteam">MIN</span><span class="combo-pprob" style="color:var(--cyan)">79.8%</span></div><div class="combo-player"><span class="combo-pname">Nathan MacKinnon</span><span class="combo-pteam">COL</span><span class="combo-pprob" style="color:var(--cyan)">76.9%</span></div></div>
+                </div>
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#2</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#f4a21e">44.5%</span>
+                      <span class="combo-cote">cote theo. <strong>2.25</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="44.5"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Leon Draisaitl</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">84.5%</span></div><div class="combo-player"><span class="combo-pname">Kirill Kaprizov</span><span class="combo-pteam">MIN</span><span class="combo-pprob" style="color:var(--cyan)">78.4%</span></div><div class="combo-player"><span class="combo-pname">Nathan MacKinnon</span><span class="combo-pteam">COL</span><span class="combo-pprob" style="color:var(--cyan)">76.9%</span></div></div>
+                </div>
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#3</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#f4a21e">44.5%</span>
+                      <span class="combo-cote">cote theo. <strong>2.25</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="44.5"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Leon Draisaitl</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">84.5%</span></div><div class="combo-player"><span class="combo-pname">Quinn Hughes</span><span class="combo-pteam">MIN</span><span class="combo-pprob" style="color:var(--cyan)">78.4%</span></div><div class="combo-player"><span class="combo-pname">Nathan MacKinnon</span><span class="combo-pteam">COL</span><span class="combo-pprob" style="color:var(--cyan)">76.9%</span></div></div>
+                </div>
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#4</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#f4a21e">44.4%</span>
+                      <span class="combo-cote">cote theo. <strong>2.25</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="44.4"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Leon Draisaitl</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">84.5%</span></div><div class="combo-player"><span class="combo-pname">Matt Boldy</span><span class="combo-pteam">MIN</span><span class="combo-pprob" style="color:var(--cyan)">79.8%</span></div><div class="combo-player"><span class="combo-pname">Martin Necas</span><span class="combo-pteam">COL</span><span class="combo-pprob" style="color:var(--cyan)">75.3%</span></div></div>
+                </div>
+                <div class="combo-card">
+                  <div class="combo-header">
+                    <span class="combo-rank">#5</span>
+                    <div class="combo-probs">
+                      <span class="combo-prob-val" style="color:#f4a21e">44.1%</span>
+                      <span class="combo-cote">cote theo. <strong>2.27</strong></span>
+                    </div>
+                  </div>
+                  <div class="combo-prob-bar">
+                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="44.1"></div>
+                  </div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Nikita Kucherov</span><span class="combo-pteam">TBL</span><span class="combo-pprob" style="color:var(--cyan)">87.3%</span></div><div class="combo-player"><span class="combo-pname">Evan Bouchard</span><span class="combo-pteam">EDM</span><span class="combo-pprob" style="color:var(--cyan)">82.3%</span></div><div class="combo-player"><span class="combo-pname">Matt Boldy</span><span class="combo-pteam">MIN</span><span class="combo-pprob" style="color:var(--cyan)">79.8%</span></div><div class="combo-player"><span class="combo-pname">Nathan MacKinnon</span><span class="combo-pteam">COL</span><span class="combo-pprob" style="color:var(--cyan)">76.9%</span></div></div>
+                </div></div></div>
+  </div>
+
   <!-- ONGLET HISTORIQUE -->
   <div class="tab-content" id="tab-history">
     <div class="section-title" style="margin-top:1.5rem">Historique des picks</div>
@@ -489,7 +714,7 @@
 </main>
 
 <footer>
-  <div>NHL STATS BOT · v8.0 · Python + NHL API officielle · Genere le 08/03/2026 a 20:20</div>
+  <div>NHL STATS BOT · v8.0 · Python + NHL API officielle · Genere le 08/03/2026 a 20:31</div>
   <div style="margin-top:0.4rem">
     <a href="https://github.com/Thiboulard/NHL-Stats" target="_blank">GitHub</a>
     · <a href="https://api-web.nhle.com" target="_blank">NHL API</a>
@@ -511,12 +736,29 @@
     var panel = document.getElementById(btn.dataset.panel);
     if (panel) panel.style.display = 'block';
   }
-  var firstTab = document.querySelector('.hist-tab');
-  if (firstTab) showPanel(firstTab);
+  var comboColors = {'combo-2':'var(--cyan)','combo-3':'var(--gold)','combo-4':'#c77dff'};
+  function showCombo(btn) {
+    document.querySelectorAll('.combo-tab').forEach(b => { b.classList.remove('active'); b.style.borderBottomColor='transparent'; b.style.color='var(--muted)'; });
+    document.querySelectorAll('.combo-panel').forEach(p => p.style.display = 'none');
+    btn.classList.add('active');
+    var color = comboColors[btn.dataset.panel] || 'var(--cyan)';
+    btn.style.borderBottomColor = color;
+    btn.style.color = '#fff';
+    var panel = document.getElementById(btn.dataset.panel);
+    if (panel) { panel.style.display = 'block'; animateComboBars(); }
+  }
+  function animateComboBars() {
+    setTimeout(function() {
+      document.querySelectorAll('.combo-prob-fill').forEach(function(el) {
+        el.style.width = el.dataset.target + '%';
+      });
+    }, 100);
+  }
   setTimeout(function() {
     document.querySelectorAll('.prob-fill').forEach(function(el) {
       el.style.width = el.dataset.target + '%';
     });
+    animateComboBars();
   }, 300);
 </script>
 
