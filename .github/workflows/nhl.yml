@@ -1,26 +1,20 @@
 name: NHL Stats Update
-
 on:
   schedule:
     - cron: '0 9 * * *'
   workflow_dispatch:
-
 jobs:
   update-page:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Install dependencies
         run: pip install requests pandas scipy numpy
-
       - name: Run NHL script
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
