@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NHL STATS BOT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ice: #e8f4f8;
+      --dark: #0a0e14;
+      --navy: #0d1b2a;
+      --blue: #0077b6;
+      --cyan: #00b4d8;
+      --gold: #f4a21e;
+      --red:  #c1121f;
+      --text: #cdd6f4;
+      --muted: #6b7a99;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      overflow-x: hidden;
+    }
+
+    /* ── RINK BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(0,119,182,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 30% at 50% 100%, rgba(0,180,216,0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 3rem 2rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(0,180,216,0.15);
+    }
+
+    .logo-line {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .puck {
+      width: 48px; height: 48px;
+      background: #111;
+      border-radius: 50%;
+      border: 3px solid var(--cyan);
+      box-shadow: 0 0 20px rgba(0,180,216,0.5), inset 0 2px 4px rgba(255,255,255,0.1);
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(0,180,216,0.5), inset 0 2px 4px rgba(255,255,255,0.1); }
+      50%       { box-shadow: 0 0 40px rgba(0,180,216,0.9), inset 0 2px 4px rgba(255,255,255,0.1); }
+    }
+
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      letter-spacing: 0.08em;
+      color: #fff;
+      text-shadow: 0 0 40px rgba(0,180,216,0.4);
+      line-height: 1;
+    }
+
+    h1 span { color: var(--cyan); }
+
+    .tagline {
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .version-badge {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.25rem 0.75rem;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      border-radius: 2px;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      position: relative;
+      z-index: 10;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    /* ── SECTION TITLES ── */
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.12em;
+      color: var(--cyan);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(0,180,216,0.4), transparent);
+    }
+
+    /* ── STATS GRID ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px;
+      background: rgba(0,180,216,0.1);
+      border: 1px solid rgba(0,180,216,0.15);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      background: rgba(13,27,42,0.9);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s;
+    }
+
+    .stat-card:hover { background: rgba(0,119,182,0.15); }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      color: #fff;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-unit {
+      font-size: 0.7rem;
+      color: var(--cyan);
+      margin-left: 0.25rem;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .step {
+      border: 1px solid rgba(0,180,216,0.15);
+      background: rgba(13,27,42,0.6);
+      padding: 1.25rem;
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .step-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: rgba(0,180,216,0.15);
+      position: absolute;
+      top: 0.5rem; right: 0.75rem;
+      line-height: 1;
+    }
+
+    .step-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .step p {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── TOP PLAYERS TABLE ── */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid rgba(0,180,216,0.15);
+      border-radius: 4px;
+      margin-bottom: 3rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.72rem;
+    }
+
+    thead tr {
+      background: rgba(0,119,182,0.2);
+    }
+
+    th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      letter-spacing: 0.12em;
+      color: var(--cyan);
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    tbody tr {
+      border-top: 1px solid rgba(0,180,216,0.07);
+      transition: background 0.15s;
+    }
+
+    tbody tr:hover { background: rgba(0,119,182,0.1); }
+
+    td {
+      padding: 0.7rem 1rem;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    td.rank {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      color: var(--muted);
+      width: 40px;
+    }
+
+    td.name { color: #fff; font-weight: 600; }
+
+    td.team {
+      color: var(--cyan);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+    }
+
+    .prob-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .prob-bar {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 2px;
+      overflow: hidden;
+      min-width: 60px;
+    }
+
+    .prob-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.8s ease;
+    }
+
+    .prob-high  { background: linear-gradient(90deg, var(--cyan), #48cae4); }
+    .prob-mid   { background: linear-gradient(90deg, var(--gold), #ffc107); }
+    .prob-low   { background: linear-gradient(90deg, var(--red), #e63946); }
+
+    .prob-pct {
+      font-size: 0.7rem;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    .over-tag {
+      display: inline-block;
+      padding: 0.15rem 0.4rem;
+      font-size: 0.6rem;
+      border-radius: 2px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+
+    .over-strong { background: rgba(0,180,216,0.2); color: var(--cyan); }
+    .over-mid    { background: rgba(244,162,30,0.2); color: var(--gold); }
+
+    /* ── FORMULA BLOCK ── */
+    .formula-block {
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(0,180,216,0.15);
+      border-left: 3px solid var(--cyan);
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      font-size: 0.72rem;
+      line-height: 2;
+    }
+
+    .formula-block code {
+      color: var(--gold);
+      background: rgba(244,162,30,0.08);
+      padding: 0.1rem 0.3rem;
+      border-radius: 2px;
+    }
+
+    .formula-block .comment { color: var(--muted); }
+
+    /* ── INSTALL BLOCK ── */
+    .install-block {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(0,180,216,0.15);
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      font-size: 0.72rem;
+      line-height: 2;
+    }
+
+    .install-block .cmd { color: var(--cyan); }
+    .install-block .comment { color: var(--muted); }
+    .install-block .dollar { color: var(--gold); margin-right: 0.5rem; }
+
+    /* ── MODES ── */
+    .modes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    @media (max-width: 600px) { .modes { grid-template-columns: 1fr; } }
+
+    .mode-card {
+      border: 1px solid rgba(0,180,216,0.15);
+      background: rgba(13,27,42,0.7);
+      padding: 1.25rem;
+      border-radius: 4px;
+    }
+
+    .mode-card .mode-tag {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+      text-transform: uppercase;
+      border-radius: 2px;
+      margin-bottom: 0.75rem;
+    }
+
+    .tag-auto  { background: rgba(0,180,216,0.2); color: var(--cyan); }
+    .tag-manual{ background: rgba(244,162,30,0.2); color: var(--gold); }
+
+    .mode-cmd {
+      font-size: 0.68rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .mode-desc {
+      font-size: 0.68rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid rgba(0,180,216,0.1);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    footer a {
+      color: var(--cyan);
+      text-decoration: none;
+      margin: 0 0.5rem;
+    }
+
+    /* ── LIVE TICKER ── */
+    .ticker {
+      overflow: hidden;
+      background: rgba(0,119,182,0.12);
+      border-top: 1px solid rgba(0,180,216,0.1);
+      border-bottom: 1px solid rgba(0,180,216,0.1);
+      padding: 0.5rem 0;
+      margin-bottom: 3rem;
+    }
+
+    .ticker-inner {
+      display: flex;
+      gap: 3rem;
+      animation: ticker 25s linear infinite;
+      white-space: nowrap;
+    }
+
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .ticker-item {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    .ticker-item strong { color: var(--cyan); }
+
+    /* ── GLOW LINE ── */
+    .glow-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      margin: 2.5rem 0;
+      opacity: 0.3;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-line">
+    <div class="puck"></div>
+    <h1>NHL <span>STATS</span> BOT</h1>
+    <div class="puck"></div>
+  </div>
+  <p class="tagline">Analyse automatique · Probabilités Poisson · Top 20 joueurs du jour</p>
+  <span class="version-badge">VERSION 7.0</span>
+</header>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="ticker">
+    <span class="ticker-item"><strong>MODE AUTO</strong> — Analyse tous les matchs NHL du jour</span>
+    <span class="ticker-item"><strong>POISSON MODEL</strong> — P(Over 0.5 pts) calculé par joueur</span>
+    <span class="ticker-item"><strong>15 MATCHS</strong> — Fenêtre glissante de game-logs</span>
+    <span class="ticker-item"><strong>TELEGRAM</strong> — Envoi automatique du Top 20</span>
+    <span class="ticker-item"><strong>BETCLIC</strong> — Cotes scrapées en temps réel</span>
+    <span class="ticker-item"><strong>API NHL</strong> — Données officielles nhle.com</span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item"><strong>MODE AUTO</strong> — Analyse tous les matchs NHL du jour</span>
+    <span class="ticker-item"><strong>POISSON MODEL</strong> — P(Over 0.5 pts) calculé par joueur</span>
+    <span class="ticker-item"><strong>15 MATCHS</strong> — Fenêtre glissante de game-logs</span>
+    <span class="ticker-item"><strong>TELEGRAM</strong> — Envoi automatique du Top 20</span>
+    <span class="ticker-item"><strong>BETCLIC</strong> — Cotes scrapées en temps réel</span>
+    <span class="ticker-item"><strong>API NHL</strong> — Données officielles nhle.com</span>
+  </div>
+</div>
+
+<main>
+
+  <!-- KPI CARDS -->
+  <div class="section-title">Paramètres du modèle</div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Ligne paris</div>
+      <div class="stat-value">0.5<span class="stat-unit">PTS</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Fenêtre matchs</div>
+      <div class="stat-value">15<span class="stat-unit">GAMES</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">TOI par défaut</div>
+      <div class="stat-value">22<span class="stat-unit">MIN</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Top classement</div>
+      <div class="stat-value">20<span class="stat-unit">JOUEURS</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Saison</div>
+      <div class="stat-value" style="font-size:1.4rem">2025<span class="stat-unit">/26</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Modèle stat.</div>
+      <div class="stat-value" style="font-size:1.4rem">POISSON</div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section-title">Pipeline d'analyse</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-title">Matchs du jour</div>
+      <p>Récupère via l'API NHL officielle tous les matchs programmés aujourd'hui avec équipes et horaires.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-title">Rosters complets</div>
+      <p>Extrait forwards + défenseurs de chaque équipe impliquée. Les gardiens sont exclus (pas de points offensifs).</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-title">Game-logs</div>
+      <p>Récupère les 15 derniers matchs de chaque joueur : buts, assists, points, temps de glace (TOI).</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-title">Calcul Poisson</div>
+      <p>Normalise les points au TOI attendu, calcule λ (expected pts) puis P(X ≥ 1) via distribution de Poisson.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">05</div>
+      <div class="step-title">Cotes Betclic</div>
+      <p>Scrape en temps réel les cotes Over/Under pour chaque joueur du Top 20 via Playwright/Chromium.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">06</div>
+      <div class="step-title">Envoi Telegram</div>
+      <p>Construit et envoie le classement Top 20 sur ton canal Telegram avec stats + cotes détaillées.</p>
+    </div>
+  </div>
+
+  <!-- EXAMPLE TOP TABLE -->
+  <div class="section-title">Exemple de classement (illustratif)</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Joueur</th>
+          <th>Équipe</th>
+          <th>Pos</th>
+          <th>Avg PTS</th>
+          <th>TOI moy</th>
+          <th>PTS/60</th>
+          <th>Expected</th>
+          <th>P(Over 0.5)</th>
+          <th>Signal</th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+
+  <!-- FORMULA -->
+  <div class="section-title">Formule statistique</div>
+  <div class="formula-block">
+    <div><span class="comment">// Normalisation au TOI attendu</span></div>
+    <div><code>pts_per_60</code> = (total_points / total_toi) × 60</div>
+    <div><code>expected_pts</code> = avg_points × (toi_expected / avg_toi)</div>
+    <div>&nbsp;</div>
+    <div><span class="comment">// Distribution de Poisson (λ = expected_pts)</span></div>
+    <div><code>P(Over 0.5)</code> = 1 − P(X = 0) = 1 − e<sup>−λ</sup></div>
+    <div>&nbsp;</div>
+    <div><span class="comment">// Critère de sélection minimum</span></div>
+    <div><code>min_games</code> = 3 matchs pour stat fiable</div>
+  </div>
+
+  <!-- MODES -->
+  <div class="section-title">Modes d'exécution</div>
+  <div class="modes">
+    <div class="mode-card">
+      <span class="mode-tag tag-auto">Mode Auto</span>
+      <div class="mode-cmd">$ python nhl_stats_telegram.py <strong>auto</strong></div>
+      <div class="mode-desc">Analyse complète de tous les joueurs des matchs du jour. Scrape les cotes Betclic. Envoie le Top 20 sur Telegram automatiquement.</div>
+    </div>
+    <div class="mode-card">
+      <span class="mode-tag tag-manual">Mode Joueur</span>
+      <div class="mode-cmd">$ python nhl_stats_telegram.py</div>
+      <div class="mode-desc">Recherche manuelle d'un joueur spécifique. Saisie interactive de l'ID joueur et du TOI attendu. Export CSV + envoi Telegram.</div>
+    </div>
+  </div>
+
+  <!-- INSTALL -->
+  <div class="section-title">Installation</div>
+  <div class="install-block">
+    <div><span class="comment"># Dépendances Python</span></div>
+    <div><span class="dollar">$</span><span class="cmd">pip install requests pandas scipy numpy playwright</span></div>
+    <div><span class="dollar">$</span><span class="cmd">playwright install chromium</span></div>
+    <div>&nbsp;</div>
+    <div><span class="comment"># Configuration dans le script</span></div>
+    <div><span class="dollar">→</span> <span class="cmd">TELEGRAM_TOKEN</span> &nbsp;<span class="comment">= ton token @BotFather</span></div>
+    <div><span class="dollar">→</span> <span class="cmd">CHAT_ID</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">= ton channel ID</span></div>
+    <div><span class="dollar">→</span> <span class="cmd">SEASON</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">= "20252026" (actuelle)</span></div>
+  </div>
+
+  <div class="glow-line"></div>
+
+</main>
+
+<footer>
+  <div>NHL STATS BOT · v7.0 · Python + NHL API officielle</div>
+  <div style="margin-top:0.5rem">
+    <a href="https://github.com" target="_blank">GitHub</a>
+    ·
+    <a href="https://api-web.nhle.com" target="_blank">NHL API</a>
+    ·
+    Modèle : Poisson · Source : nhle.com
+  </div>
+</footer>
+
+<script>
+  // ── SAMPLE DATA (illustrative) ──
+  const players = [
+    { rank:1,  name:"Nathan MacKinnon", team:"COL", pos:"C",  avg:1.53, toi:22.1, p60:4.15, exp:1.51, prob:78.0 },
+    { rank:2,  name:"Leon Draisaitl",   team:"EDM", pos:"C",  avg:1.40, toi:21.8, p60:3.85, exp:1.42, prob:75.9 },
+    { rank:3,  name:"Nikita Kucherov",  team:"TBL", pos:"RW", avg:1.33, toi:20.5, p60:3.90, exp:1.38, prob:74.9 },
+    { rank:4,  name:"David Pastrnak",   team:"BOS", pos:"RW", avg:1.27, toi:19.8, p60:3.85, exp:1.30, prob:72.8 },
+    { rank:5,  name:"Connor McDavid",   team:"EDM", pos:"C",  avg:1.20, toi:22.4, p60:3.21, exp:1.19, prob:69.6 },
+    { rank:6,  name:"Mikko Rantanen",   team:"COL", pos:"RW", avg:1.13, toi:20.2, p60:3.36, exp:1.15, prob:68.3 },
+    { rank:7,  name:"Brady Tkachuk",    team:"OTT", pos:"LW", avg:1.07, toi:18.9, p60:3.40, exp:1.10, prob:66.7 },
+    { rank:8,  name:"Auston Matthews",  team:"TOR", pos:"C",  avg:1.00, toi:21.1, p60:2.84, exp:1.05, prob:65.0 },
+    { rank:9,  name:"Jason Robertson",  team:"DAL", pos:"LW", avg:0.93, toi:19.5, p60:2.86, exp:0.98, prob:62.5 },
+    { rank:10, name:"Cale Makar",       team:"COL", pos:"D",  avg:0.87, toi:24.3, p60:2.15, exp:0.93, prob:60.5 },
+  ];
+
+  const tbody = document.getElementById('table-body');
+
+  players.forEach((p, i) => {
+    const probClass = p.prob >= 70 ? 'prob-high' : p.prob >= 60 ? 'prob-mid' : 'prob-low';
+    const pctColor  = p.prob >= 70 ? 'var(--cyan)' : p.prob >= 60 ? 'var(--gold)' : 'var(--muted)';
+    const signal    = p.prob >= 70
+      ? '<span class="over-tag over-strong">⬆ FORT</span>'
+      : p.prob >= 62
+      ? '<span class="over-tag over-mid">⬆ MID</span>'
+      : '—';
+
+    tbody.innerHTML += `
+      <tr style="animation: fadeIn 0.4s ease ${i * 0.06}s both">
+        <td class="rank">${p.rank}</td>
+        <td class="name">${p.name}</td>
+        <td class="team">${p.team}</td>
+        <td>${p.pos}</td>
+        <td>${p.avg.toFixed(2)}</td>
+        <td>${p.toi.toFixed(1)}</td>
+        <td>${p.p60.toFixed(2)}</td>
+        <td>${p.exp.toFixed(2)}</td>
+        <td>
+          <div class="prob-bar-wrap">
+            <div class="prob-bar">
+              <div class="prob-fill ${probClass}" style="width:0%" data-target="${p.prob}"></div>
+            </div>
+            <span class="prob-pct" style="color:${pctColor}">${p.prob}%</span>
+          </div>
+        </td>
+        <td>${signal}</td>
+      </tr>`;
+  });
+
+  // Animate bars on load
+  setTimeout(() => {
+    document.querySelectorAll('.prob-fill').forEach(el => {
+      el.style.width = el.dataset.target + '%';
+    });
+  }, 300);
+</script>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+</style>
+
+</body>
+</html>
