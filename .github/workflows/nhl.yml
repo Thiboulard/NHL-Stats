@@ -1,28 +1,27 @@
-name: NHL Stats - Mise à jour quotidienne
+name: NHL Stats Update
 
 on:
   schedule:
-    - cron: '0 9 * * *'   # 09:00 UTC = 10:00 France (heure d'hiver)
-                           # En été (CEST) = 11:00 France → change en '0 8 * * *'
-  workflow_dispatch:       # Permet aussi de lancer manuellement depuis GitHub
+    - cron: '0 9 * * *'
+  workflow_dispatch:
 
 jobs:
   update-page:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout du dépôt
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Installation Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Installation des dépendances
+      - name: Install dependencies
         run: pip install requests pandas scipy numpy
 
-      - name: Lancement du script NHL
+      - name: Run NHL script
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: python nhl_generate_page.py
