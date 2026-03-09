@@ -624,63 +624,50 @@ def build_combos_html(combos):
 # ============================================================
 
 def fetch_odds():
-    """Cotes Betclic prioritaires, fallback meilleure cote EU. Retourne {name_lower: (cote, source)}."""
+    """Cotes player props NHL — regions us/us2 pour player_points."""
     try:
         betclic_map = {}
-        eu_map      = {}
+        us_map      = {}
 
-        # Appel Betclic
-        r = requests.get(
-            "https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/",
-            params={"apiKey": ODDS_API_KEY, "regions": "eu",
-                    "markets": "player_props", "oddsFormat": "decimal",
-                    "bookmakers": "betclic"},
-            timeout=15)
-        print("  Betclic status: {} - {} events".format(r.status_code, len(r.json())))
-        if r.status_code == 200:
+        # 1. Betclic via région eu (h2h uniquement dispo ici, on garde pour debug)
+        # Les player props NHL ne sont PAS dispo en région eu sur The Odds API.
+
+        # 2. Regions us + us2 pour player_points (Over 0.5 pts)
+        for region in ("us", "us2"):
+            r = requests.get(
+                "https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/",
+                params={
+                    "apiKey":      ODDS_API_KEY,
+                    "regions":     region,
+                    "markets":     "player_points",
+                    "oddsFormat":  "decimal",
+                },
+                timeout=15,
+            )
+            print("     Odds API [{}] status: {} - {} events".format(
+                region, r.status_code, len(r.json()) if r.status_code == 200 else "err"))
+            if r.status_code != 200:
+                print("     Odds API [{}] erreur: {}".format(region, r.text[:200]))
+                continue
             for event in r.json():
                 for bm in event.get("bookmakers", []):
                     for market in bm.get("markets", []):
-                        if market.get("key") != "player_points": continue
+                        if market.get("key") != "player_points":
+                            continue
                         for outcome in market.get("outcomes", []):
-                            if outcome.get("point", 0) != 0.5: continue
+                            if outcome.get("point", 0) != 0.5:
+                                continue
                             name  = outcome.get("name", "").lower().strip()
                             price = outcome.get("price", 0)
-                            if name not in betclic_map or price > betclic_map[name]:
-                                betclic_map[name] = price
+                            if name not in us_map or price > us_map[name]:
+                                us_map[name] = (price, bm.get("key", "us"))
 
-        # Appel fallback EU
-        r2 = requests.get(
-            "https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/",
-            params={"apiKey": ODDS_API_KEY, "regions": "eu",
-                    "markets": "player_props", "oddsFormat": "decimal"},
-            timeout=15)
-        print("  EU status: {} - {} events".format(r2.status_code, len(r2.json())))
-        if r2.status_code == 200:
-            for event in r2.json():
-                for bm in event.get("bookmakers", []):
-                    for market in bm.get("markets", []):
-                        if market.get("key") != "player_points": continue
-                        for outcome in market.get("outcomes", []):
-                            if outcome.get("point", 0) != 0.5: continue
-                            name  = outcome.get("name", "").lower().strip()
-                            price = outcome.get("price", 0)
-                            if name not in eu_map or price > eu_map[name]:
-                                eu_map[name] = price
-
-        # Merge Betclic prioritaire
-        final = {}
-        for name in set(betclic_map) | set(eu_map):
-            if name in betclic_map:
-                final[name] = (betclic_map[name], "Betclic")
-            else:
-                final[name] = (eu_map[name], "EU")
+        final = {name: val for name, val in us_map.items()}
         print("     {} cotes recuperees".format(len(final)))
-        for name, (cote, src) in list(final.items())[:15]:
-            print("  ODDS: {} -> {} ({})".format(name, cote, src))
         return final
+
     except Exception as e:
-        print("     [Odds API] erreur : {}".format(e))
+        print("     Odds API erreur : {}".format(e))
         return {}
 
 
