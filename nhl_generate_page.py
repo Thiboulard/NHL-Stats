@@ -554,6 +554,7 @@ def build_html(games, top_players, history, generated_at, odds_map=None, value_p
     matchups  = " · ".join(["{} vs {}".format(g["away"], g["home"]) for g in games])
     if odds_map    is None: odds_map    = {}
     if value_picks is None: value_picks = []
+    value_bets_html = ""
 
     # Calcul des combines
     combos      = compute_combos(top_players, games) if top_players else {2: [], 3: [], 4: []}
