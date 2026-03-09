@@ -624,59 +624,70 @@ def build_combos_html(combos):
 # ============================================================
 
 def fetch_odds():
-    """Cotes Betclic prioritaires, fallback meilleure cote EU. Retourne {name_lower: (cote, source)}."""
+    """
+    Récupère les player props NHL (Over 0.5 pts) via The Odds API.
+    Utilise obligatoirement le endpoint /events/{eventId}/odds, region us.
+    """
     try:
-        betclic_map = {}
-        eu_map      = {}
-
-        # Appel Betclic
+        # Étape 1 : liste des events du jour
         r = requests.get(
-            "https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/",
-            params={"apiKey": ODDS_API_KEY, "regions": "eu",
-                    "markets": "player_points", "oddsFormat": "decimal",
-                    "bookmakers": "betclic"},
-            timeout=15)
-        if r.status_code == 200:
-            for event in r.json():
-                for bm in event.get("bookmakers", []):
-                    for market in bm.get("markets", []):
-                        if market.get("key") != "player_points": continue
-                        for outcome in market.get("outcomes", []):
-                            if outcome.get("point", 0) != 0.5: continue
-                            name  = outcome.get("name", "").lower().strip()
-                            price = outcome.get("price", 0)
-                            if name not in betclic_map or price > betclic_map[name]:
-                                betclic_map[name] = price
+            "https://api.the-odds-api.com/v4/sports/icehockey_nhl/events",
+            params={"apiKey": ODDS_API_KEY},
+            timeout=15,
+        )
+        if r.status_code != 200:
+            print("     Odds API events: {} - {}".format(r.status_code, r.text[:150]))
+            return {}
 
-        # Appel fallback EU
-        r2 = requests.get(
-            "https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/",
-            params={"apiKey": ODDS_API_KEY, "regions": "eu",
-                    "markets": "player_points", "oddsFormat": "decimal"},
-            timeout=15)
-        if r2.status_code == 200:
-            for event in r2.json():
-                for bm in event.get("bookmakers", []):
-                    for market in bm.get("markets", []):
-                        if market.get("key") != "player_points": continue
-                        for outcome in market.get("outcomes", []):
-                            if outcome.get("point", 0) != 0.5: continue
-                            name  = outcome.get("name", "").lower().strip()
-                            price = outcome.get("price", 0)
-                            if name not in eu_map or price > eu_map[name]:
-                                eu_map[name] = price
+        events = r.json()
+        print("     {} events NHL".format(len(events)))
+        odds_map = {}
 
-        # Merge Betclic prioritaire
-        final = {}
-        for name in set(betclic_map) | set(eu_map):
-            if name in betclic_map:
-                final[name] = (betclic_map[name], "Betclic")
-            else:
-                final[name] = (eu_map[name], "EU")
-        print("     {} cotes recuperees".format(len(final)))
-        return final
+        # Étape 2 : props par event
+        for event in events:
+            event_id = event.get("id")
+            if not event_id:
+                continue
+
+            r2 = requests.get(
+                "https://api.the-odds-api.com/v4/sports/icehockey_nhl/events/{}/odds".format(event_id),
+                params={
+                    "apiKey":     ODDS_API_KEY,
+                    "regions":    "us",
+                    "markets":    "player_points",
+                    "oddsFormat": "decimal",
+                    "bookmakers": "draftkings,fanduel,betmgm",  # les plus fiables
+                },
+                timeout=15,
+            )
+            if r2.status_code != 200:
+                print("     Event {} - {}: {}".format(event_id[:8], r2.status_code, r2.text[:100]))
+                continue
+
+            for bm in r2.json().get("bookmakers", []):
+                for market in bm.get("markets", []):
+                    if market.get("key") != "player_points":
+                        continue
+                    for outcome in market.get("outcomes", []):
+                        # On veut uniquement Over 0.5
+                        if outcome.get("point", 0) != 0.5:
+                            continue
+                        if "over" not in outcome.get("name", "").lower() and \
+                           "over" not in outcome.get("description", "").lower():
+                            continue
+                        # Certaines API mettent le nom du joueur dans "description"
+                        name = (outcome.get("description") or outcome.get("name", "")).lower().strip()
+                        price = outcome.get("price", 0)
+                        if name and (name not in odds_map or price > odds_map[name][0]):
+                            odds_map[name] = (price, bm.get("title", "US"))
+
+            time.sleep(0.4)
+
+        print("     {} cotes recuperees".format(len(odds_map)))
+        return odds_map
+
     except Exception as e:
-        print("     [Odds API] erreur : {}".format(e))
+        print("     Odds API erreur : {}".format(e))
         return {}
 
 
