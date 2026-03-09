@@ -633,7 +633,7 @@ def fetch_odds():
         r = requests.get(
             "https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/",
             params={"apiKey": ODDS_API_KEY, "regions": "eu",
-                    "markets": "player_points", "oddsFormat": "decimal",
+                    "markets": "player_props", "oddsFormat": "decimal",
                     "bookmakers": "betclic"},
             timeout=15)
         print("  Betclic status: {} - {} events".format(r.status_code, len(r.json())))
@@ -653,7 +653,7 @@ def fetch_odds():
         r2 = requests.get(
             "https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/",
             params={"apiKey": ODDS_API_KEY, "regions": "eu",
-                    "markets": "player_points", "oddsFormat": "decimal"},
+                    "markets": "player_props", "oddsFormat": "decimal"},
             timeout=15)
         print("  EU status: {} - {} events".format(r2.status_code, len(r2.json())))
         if r2.status_code == 200:
