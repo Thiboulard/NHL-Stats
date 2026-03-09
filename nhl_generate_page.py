@@ -624,51 +624,75 @@ def build_combos_html(combos):
 # ============================================================
 
 def fetch_odds():
-    """Cotes player props NHL — regions us/us2 pour player_points."""
+    """
+    Récupère les player props NHL (Over 0.5 pts) via The Odds API.
+    Utilise obligatoirement le endpoint /events/{eventId}/odds, region us.
+    """
     try:
-        betclic_map = {}
-        us_map      = {}
+        # Étape 1 : liste des events du jour
+        r = requests.get(
+            "https://api.the-odds-api.com/v4/sports/icehockey_nhl/events",
+            params={"apiKey": ODDS_API_KEY},
+            timeout=15,
+        )
+        if r.status_code != 200:
+            print("     Odds API events: {} - {}".format(r.status_code, r.text[:150]))
+            return {}
 
-        # 1. Betclic via région eu (h2h uniquement dispo ici, on garde pour debug)
-        # Les player props NHL ne sont PAS dispo en région eu sur The Odds API.
+        events = r.json()
+        print("     {} events NHL".format(len(events)))
+        odds_map = {}
 
-        # 2. Regions us + us2 pour player_points (Over 0.5 pts)
-        for region in ("us", "us2"):
-            r = requests.get(
-                "https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/",
+        # Étape 2 : props par event
+        for event in events:
+            event_id = event.get("id")
+            if not event_id:
+                continue
+
+            r2 = requests.get(
+                "https://api.the-odds-api.com/v4/sports/icehockey_nhl/events/{}/odds".format(event_id),
                 params={
-                    "apiKey":      ODDS_API_KEY,
-                    "regions":     region,
-                    "markets":     "player_points",
-                    "oddsFormat":  "decimal",
+                    "apiKey":     ODDS_API_KEY,
+                    "regions":    "us",
+                    "markets":    "player_points",
+                    "oddsFormat": "decimal",
+                    "bookmakers": "draftkings,fanduel,betmgm",  # les plus fiables
                 },
                 timeout=15,
             )
-            print("     Odds API [{}] status: {} - {} events".format(
-                region, r.status_code, len(r.json()) if r.status_code == 200 else "err"))
-            if r.status_code != 200:
-                print("     Odds API [{}] erreur: {}".format(region, r.text[:200]))
+            if r2.status_code != 200:
+                print("     Event {} - {}: {}".format(event_id[:8], r2.status_code, r2.text[:100]))
                 continue
-            for event in r.json():
-                for bm in event.get("bookmakers", []):
-                    for market in bm.get("markets", []):
-                        if market.get("key") != "player_points":
-                            continue
-                        for outcome in market.get("outcomes", []):
-                            if outcome.get("point", 0) != 0.5:
-                                continue
-                            name  = outcome.get("name", "").lower().strip()
-                            price = outcome.get("price", 0)
-                            if name not in us_map or price > us_map[name]:
-                                us_map[name] = (price, bm.get("key", "us"))
 
-        final = {name: val for name, val in us_map.items()}
-        print("     {} cotes recuperees".format(len(final)))
-        return final
+            for bm in r2.json().get("bookmakers", []):
+                for market in bm.get("markets", []):
+                    if market.get("key") != "player_points":
+                        continue
+                    for outcome in market.get("outcomes", []):
+                        # On veut uniquement Over 0.5
+                        if outcome.get("point", 0) != 0.5:
+                            continue
+                        if "over" not in outcome.get("name", "").lower() and \
+                           "over" not in outcome.get("description", "").lower():
+                            continue
+                        # Certaines API mettent le nom du joueur dans "description"
+                        name = (outcome.get("description") or outcome.get("name", "")).lower().strip()
+                        price = outcome.get("price", 0)
+                        if name and (name not in odds_map or price > odds_map[name][0]):
+                            odds_map[name] = (price, bm.get("title", "US"))
+
+            time.sleep(0.4)
+
+        print("     {} cotes recuperees".format(len(odds_map)))
+        return odds_map
 
     except Exception as e:
         print("     Odds API erreur : {}".format(e))
         return {}
+
+# DEBUG — à retirer après vérification
+print("     Exemple cotes:", list(odds_map.items())[:3])
+print("     Exemple joueurs top:", [p["name"].lower() for p in top[:3]])
 
 
 def build_html(games, top_players, history, generated_at, odds_map=None, value_picks=None):
