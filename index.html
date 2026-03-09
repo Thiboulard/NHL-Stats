@@ -3,388 +3,534 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>NHL STATS BOT</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Condensed:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <title>NHL / SYSTEM</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
   <style>
     :root{
-      --bg:#0d0f1a;
-      --surface:#151929;
-      --surface2:#1c2238;
-      --red:#ff3a2d;
-      --yellow:#ffd500;
-      --blue:#2563ff;
-      --cyan:#00e5ff;
-      --magenta:#ff2d9b;
-      --text:#e8eaf0;
-      --muted:#6b7a99;
-      --ink:#0a0c14;
+      --void:#030507;
+      --surface:#080c10;
+      --panel:#0c1117;
+      --line:rgba(0,255,148,0.12);
+      --g:#00ff94;
+      --g2:#00c97a;
+      --g-dim:rgba(0,255,148,0.45);
+      --g-ghost:rgba(0,255,148,0.07);
+      --warn:#ff6b35;
+      --cold:#5be9ff;
+      --text:#c8d8cc;
+      --muted:rgba(200,216,204,0.35);
+      --mono:'DM Mono',monospace;
     }
-    *{margin:0;padding:0;box-sizing:border-box;}
 
-    /* HALFTONE DOT BG */
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+
     body{
-      background-color:var(--bg);
+      background:var(--void);
       color:var(--text);
-      font-family:'Barlow Condensed',sans-serif;
+      font-family:var(--mono);
+      font-size:13px;
+      line-height:1.6;
       overflow-x:hidden;
-      position:relative;
+      cursor:crosshair;
     }
+
+    /* GRID BACKGROUND */
     body::before{
       content:'';
       position:fixed;inset:0;pointer-events:none;z-index:0;
-      background-image:radial-gradient(circle,rgba(255,213,0,0.055) 1px,transparent 1px);
-      background-size:20px 20px;
+      background-image:
+        linear-gradient(var(--g-ghost) 1px,transparent 1px),
+        linear-gradient(90deg,var(--g-ghost) 1px,transparent 1px);
+      background-size:48px 48px;
+      mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 100%);
     }
+
+    /* SCAN LINE */
     body::after{
       content:'';
       position:fixed;inset:0;pointer-events:none;z-index:1;
-      background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);
+      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
     }
 
-    /* ===== HEADER ===== */
+    /* ══════════════ HEADER ══════════════ */
     header{
-      position:relative;z-index:10;
-      background:var(--yellow);
-      border-bottom:5px solid var(--ink);
-      overflow:hidden;
+      position:relative;z-index:20;
+      border-bottom:1px solid var(--line);
+      padding:0;
     }
-    .header-top{
-      background:var(--red);
-      border-bottom:4px solid var(--ink);
+
+    .sys-bar{
+      display:flex;align-items:center;justify-content:space-between;
       padding:0.4rem 2rem;
-      display:flex;justify-content:space-between;align-items:center;
+      border-bottom:1px solid var(--line);
+      background:var(--surface);
     }
-    .header-top-label{font-family:'Bangers',cursive;font-size:0.9rem;letter-spacing:0.15em;color:var(--yellow);}
-    .header-main{
-      padding:1.5rem 2rem 1.2rem;
-      text-align:center;
-      position:relative;
+    .sys-id{
+      font-size:0.6rem;letter-spacing:0.3em;color:var(--muted);text-transform:uppercase;
     }
-    .header-main::before{
-      content:'';
-      position:absolute;inset:0;
-      background:repeating-linear-gradient(-45deg,transparent,transparent 10px,rgba(0,0,0,0.035) 10px,rgba(0,0,0,0.035) 20px);
-      pointer-events:none;
+    .sys-status{
+      display:flex;align-items:center;gap:0.5rem;
+      font-size:0.6rem;letter-spacing:0.2em;color:var(--g-dim);
     }
+    .dot-pulse{
+      width:5px;height:5px;border-radius:50%;background:var(--g);
+      animation:dot-blink 2s ease-in-out infinite;
+    }
+    @keyframes dot-blink{0%,100%{opacity:1;box-shadow:0 0 6px var(--g);}50%{opacity:0.3;box-shadow:none;}}
+
+    .header-core{
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      padding:2.5rem 2rem 2rem;
+      gap:2rem;
+    }
+    .header-left{
+      display:flex;flex-direction:column;gap:0.75rem;
+    }
+    .h-label{font-size:0.58rem;letter-spacing:0.35em;color:var(--muted);text-transform:uppercase;}
+    .stat-block{
+      display:flex;flex-direction:column;
+    }
+    .stat-val{
+      font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;
+      color:var(--g);line-height:1;
+      text-shadow:0 0 40px rgba(0,255,148,0.3);
+    }
+    .stat-sub{font-size:0.58rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-top:0.2rem;}
+
+    /* CENTER LOGO */
+    .logo-center{text-align:center;}
     h1{
-      font-family:'Bangers',cursive;
-      font-size:clamp(3.5rem,10vw,7rem);
-      letter-spacing:0.06em;
-      color:var(--ink);
-      line-height:0.9;
-      position:relative;
-      display:inline-block;
+      font-family:'Syne',sans-serif;
+      font-size:clamp(1.8rem,4vw,3rem);
+      font-weight:800;
+      letter-spacing:0.15em;
+      color:#fff;
+      text-transform:uppercase;
+      line-height:1;
     }
-    h1 .accent{color:var(--red);}
-    h1 .accent2{color:var(--blue);}
+    h1 .slash{color:var(--g);font-weight:300;margin:0 0.1em;}
+    .sub-logo{
+      font-size:0.55rem;letter-spacing:0.4em;color:var(--muted);
+      text-transform:uppercase;margin-top:0.5rem;
+    }
 
-    /* GLITCH on h1 */
-    @keyframes glitch-main{
-      0%,90%,100%{
-        text-shadow:5px 5px 0 var(--red),-3px -3px 0 rgba(37,99,255,0.5);
-        transform:skewX(0deg);
-      }
-      91%{text-shadow:-6px 3px 0 var(--cyan),6px -3px 0 var(--red);transform:skewX(-3deg) translateX(3px);}
-      92%{text-shadow:6px -3px 0 var(--magenta),-4px 3px 0 var(--blue);transform:skewX(3deg) translateX(-3px);}
-      93%{text-shadow:0 0 0 transparent;transform:skewX(0);}
-      94%{text-shadow:-5px 0 0 var(--cyan),5px 0 0 var(--red);transform:translateX(2px);}
-      95%{text-shadow:5px 5px 0 var(--red),-3px -3px 0 rgba(37,99,255,0.5);transform:skewX(0);}
+    .header-right{
+      display:flex;flex-direction:column;gap:0.75rem;align-items:flex-end;
     }
-    h1{animation:glitch-main 7s ease-in-out infinite;}
-
-    .tagline{font-family:'Bangers',cursive;font-size:1.1rem;letter-spacing:0.2em;color:var(--ink);margin-top:0.3rem;opacity:0.7;}
-    .meta-pill{
-      display:inline-block;
-      background:var(--ink);color:var(--text);
-      font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;
-      padding:0.25rem 0.75rem;margin-top:0.5rem;
-      clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
-    }
-    .meta-pill strong{color:var(--cyan);}
 
     /* GLOBAL RATE */
     .global-rate{
-      margin:1rem auto 0;max-width:380px;
-      background:var(--surface);
-      border:4px solid var(--ink);
-      box-shadow:6px 6px 0 var(--ink);
-      padding:1rem 1.5rem;text-align:center;position:relative;
+      display:flex;flex-direction:column;align-items:flex-end;
     }
-    .global-rate::before{
-      content:'STATS';
-      position:absolute;top:-14px;left:16px;
-      background:var(--blue);color:var(--yellow);
-      font-family:'Bangers',cursive;font-size:0.75rem;letter-spacing:0.15em;
-      padding:0 0.5rem;border:3px solid var(--ink);
+    .global-rate-label{font-size:0.58rem;letter-spacing:0.3em;color:var(--muted);text-transform:uppercase;}
+    .global-rate-value{
+      font-family:'Syne',sans-serif;font-size:2.8rem;font-weight:800;line-height:1;
     }
-    .global-rate-label{font-size:0.55rem;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase;margin-bottom:0.2rem;font-weight:700;}
-    .global-rate-value{font-family:'Bangers',cursive;font-size:3.5rem;letter-spacing:0.05em;line-height:1;}
-    .global-rate-sub{font-size:0.65rem;color:var(--muted);margin-top:0.2rem;font-weight:600;}
+    .global-rate-sub{font-size:0.6rem;color:var(--muted);margin-top:0.15rem;}
 
-    /* ===== TICKER ===== */
+    /* TICKER */
     .ticker{
-      overflow:hidden;background:var(--ink);
-      border-top:3px solid var(--yellow);border-bottom:3px solid var(--yellow);
-      padding:0.45rem 0;position:relative;z-index:10;
+      overflow:hidden;
+      border-top:1px solid var(--line);
+      background:var(--surface);
+      padding:0.35rem 0;
+      position:relative;z-index:10;
     }
-    .ticker-inner{display:flex;gap:0;animation:ticker 32s linear infinite;white-space:nowrap;}
+    .ticker::before,.ticker::after{
+      content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none;
+    }
+    .ticker::before{left:0;background:linear-gradient(90deg,var(--surface),transparent);}
+    .ticker::after{right:0;background:linear-gradient(-90deg,var(--surface),transparent);}
+    .ticker-inner{display:flex;gap:0;animation:ticker 40s linear infinite;white-space:nowrap;}
     @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
     .ticker-item{
-      font-family:'Bangers',cursive;font-size:0.85rem;letter-spacing:0.12em;
-      color:var(--yellow);padding:0 2rem;border-right:2px solid rgba(255,213,0,0.25);
+      font-size:0.6rem;letter-spacing:0.2em;color:var(--muted);
+      padding:0 3rem;border-right:1px solid var(--line);
+      text-transform:uppercase;
     }
-    .ticker-item strong{color:var(--cyan);}
+    .ticker-item em{color:var(--g);font-style:normal;}
 
-    /* ===== TABS ===== */
-    .tabs{
-      display:flex;background:var(--ink);
+    /* ══════════════ NAV ══════════════ */
+    nav{
       position:sticky;top:0;z-index:50;
-      border-bottom:4px solid var(--yellow);overflow-x:auto;
+      background:rgba(3,5,7,0.95);
+      backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);
+      display:flex;align-items:stretch;
+    }
+    .nav-prefix{
+      font-size:0.58rem;letter-spacing:0.25em;color:var(--muted);
+      padding:0 1.5rem;display:flex;align-items:center;
+      border-right:1px solid var(--line);
+      text-transform:uppercase;
     }
     .tab-btn{
-      background:transparent;border:none;
-      border-right:2px solid rgba(255,213,0,0.15);
-      padding:0.9rem 1.8rem;
-      font-family:'Bangers',cursive;font-size:1rem;letter-spacing:0.15em;
-      color:rgba(255,213,0,0.45);cursor:pointer;transition:all 0.15s;white-space:nowrap;position:relative;
+      background:none;border:none;
+      border-right:1px solid var(--line);
+      padding:0.9rem 1.6rem;
+      font-family:var(--mono);font-size:0.65rem;
+      letter-spacing:0.2em;color:var(--muted);
+      cursor:pointer;transition:all 0.2s;
+      text-transform:uppercase;
+      position:relative;
     }
-    .tab-btn:hover{color:var(--yellow);background:rgba(255,213,0,0.06);}
-    .tab-btn.active{color:var(--ink);background:var(--yellow);}
-    .tab-btn.active::after{
-      content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);
-      border:6px solid transparent;border-top-color:var(--yellow);
+    .tab-btn::before{
+      content:'';
+      position:absolute;bottom:0;left:0;right:0;height:1px;
+      background:var(--g);transform:scaleX(0);transition:transform 0.2s;
     }
-    .tab-content{display:none;}
+    .tab-btn:hover{color:var(--text);background:var(--g-ghost);}
+    .tab-btn.active{color:var(--g);}
+    .tab-btn.active::before{transform:scaleX(1);}
+    .tab-content{display:none;animation:fadeUp 0.3s ease;}
     .tab-content.active{display:block;}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 
-    /* ===== MAIN ===== */
-    main{position:relative;z-index:10;max-width:1140px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+    /* ══════════════ MAIN ══════════════ */
+    main{
+      position:relative;z-index:10;
+      max-width:1200px;margin:0 auto;
+      padding:2.5rem 2rem 5rem;
+    }
 
+    /* SECTION HEADERS */
     .section-title{
-      font-family:'Bangers',cursive;font-size:1.6rem;letter-spacing:0.1em;
-      color:var(--yellow);margin-bottom:1.2rem;margin-top:1.5rem;
-      display:inline-flex;align-items:center;gap:0.75rem;
-      background:var(--ink);padding:0.3rem 1.2rem 0.3rem 0.8rem;
-      clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%);
+      display:flex;align-items:center;gap:1.5rem;
+      margin-bottom:1.25rem;margin-top:2rem;
+    }
+    .section-title-text{
+      font-size:0.6rem;letter-spacing:0.35em;color:var(--g);
+      text-transform:uppercase;white-space:nowrap;
+    }
+    .section-title-line{
+      flex:1;height:1px;
+      background:linear-gradient(90deg,var(--line),transparent);
+    }
+    .section-title-num{
+      font-size:0.58rem;letter-spacing:0.2em;color:var(--muted);
     }
 
+    /* MATCHUP BAR */
     .matchups-bar{
-      background:var(--surface);border:3px solid rgba(255,213,0,0.3);
-      box-shadow:4px 4px 0 var(--ink);
-      padding:0.6rem 1.1rem;margin-bottom:1.5rem;
-      font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.06em;
-      color:var(--text);
+      display:flex;align-items:center;gap:1rem;
+      border:1px solid var(--line);
+      background:var(--panel);
+      padding:0.65rem 1rem;
+      margin-bottom:2rem;
+      font-size:0.65rem;letter-spacing:0.1em;
+      overflow:hidden;
     }
-    .matchups-bar span{color:var(--yellow);font-weight:700;margin-right:0.5rem;}
+    .matchups-bar .date-tag{
+      color:var(--g);letter-spacing:0.2em;flex-shrink:0;
+    }
+    .matchups-bar .games-list{color:var(--muted);}
 
     .no-games{
-      background:rgba(255,58,45,0.2);border:3px solid var(--red);
-      box-shadow:4px 4px 0 var(--ink);padding:1rem;margin-bottom:1.5rem;
-      text-align:center;color:var(--red);font-family:'Bangers',cursive;
-      font-size:1.1rem;letter-spacing:0.1em;
+      border:1px solid rgba(255,107,53,0.3);
+      background:rgba(255,107,53,0.05);
+      color:var(--warn);
+      padding:1rem;margin-bottom:2rem;
+      font-size:0.65rem;letter-spacing:0.15em;text-align:center;text-transform:uppercase;
     }
 
-    /* ===== TABLE ===== */
+    /* ══════════════ TABLE ══════════════ */
     .table-wrap{
       overflow-x:auto;
-      border:4px solid rgba(255,213,0,0.4);
-      box-shadow:7px 7px 0 rgba(255,213,0,0.2);
-      margin-bottom:2.5rem;
-      background:var(--surface);
+      margin-bottom:3rem;
+      border:1px solid var(--line);
     }
-    table{width:100%;border-collapse:collapse;font-size:0.78rem;}
-    thead tr{background:var(--ink);}
+    table{width:100%;border-collapse:collapse;}
+    thead tr{
+      border-bottom:1px solid var(--line);
+      background:var(--panel);
+    }
     th{
-      padding:0.7rem 0.9rem;text-align:left;
-      font-family:'Bangers',cursive;letter-spacing:0.12em;
-      color:var(--yellow);font-size:0.8rem;white-space:nowrap;
-      border-right:1px solid rgba(255,213,0,0.12);
+      padding:0.7rem 1rem;
+      text-align:left;
+      font-size:0.55rem;letter-spacing:0.3em;
+      color:var(--muted);text-transform:uppercase;
+      white-space:nowrap;font-weight:400;
     }
-    tbody tr{border-bottom:1px solid rgba(255,213,0,0.08);transition:background 0.1s;}
-    tbody tr:nth-child(even){background:var(--surface2);}
-    tbody tr:hover{background:rgba(255,213,0,0.08);}
-    td{padding:0.6rem 0.9rem;color:var(--text);white-space:nowrap;font-weight:600;border-right:1px solid rgba(255,255,255,0.04);}
-    td.rank{font-family:'Bangers',cursive;font-size:1.4rem;color:var(--red);width:40px;text-align:center;}
-    td.name{color:#fff;font-weight:900;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.03em;}
-    td.team{color:var(--cyan);font-family:'Bangers',cursive;font-size:0.9rem;letter-spacing:0.1em;}
+    th:first-child{color:var(--g);}
+    tbody tr{
+      border-bottom:1px solid rgba(0,255,148,0.04);
+      transition:background 0.15s;
+    }
+    tbody tr:hover{background:var(--g-ghost);}
+    td{
+      padding:0.65rem 1rem;
+      color:var(--text);white-space:nowrap;
+      font-size:0.72rem;
+    }
+    td.rank{
+      font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:800;
+      color:rgba(200,216,204,0.2);width:44px;
+      letter-spacing:0.05em;
+    }
+    td.name{
+      color:#fff;font-weight:500;letter-spacing:0.04em;
+      font-size:0.78rem;
+    }
+    td.team{
+      color:var(--g-dim);font-size:0.62rem;letter-spacing:0.2em;
+    }
 
     /* PROB BAR */
-    .prob-bar-wrap{display:flex;align-items:center;gap:0.5rem;}
-    .prob-bar{flex:1;height:8px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,213,0,0.2);overflow:hidden;min-width:55px;}
-    .prob-fill{height:100%;transition:width 0.8s cubic-bezier(0.34,1.56,0.64,1);}
-    .prob-high{background:var(--blue);}
-    .prob-mid{background:var(--red);}
-    .prob-low{background:#555;}
-    .prob-pct{font-family:'Bangers',cursive;font-size:0.9rem;min-width:38px;text-align:right;}
-
-    /* GLITCH on high prob % */
-    @keyframes glitch-num{
-      0%,88%,100%{text-shadow:none;transform:none;}
-      89%{text-shadow:-3px 0 var(--cyan),3px 0 var(--red);transform:skewX(-4deg);}
-      90%{text-shadow:3px 0 var(--magenta),-3px 0 var(--blue);transform:skewX(4deg);}
-      91%{text-shadow:none;transform:none;}
+    .prob-bar-wrap{display:flex;align-items:center;gap:0.75rem;}
+    .prob-bar{
+      flex:1;height:2px;
+      background:rgba(255,255,255,0.05);
+      overflow:hidden;min-width:60px;
     }
-    .prob-pct.glitch-on{animation:glitch-num 4s ease-in-out infinite;color:var(--cyan);}
+    .prob-fill{height:100%;transition:width 1s cubic-bezier(0.16,1,0.3,1);}
+    .prob-high{background:var(--g);box-shadow:0 0 8px var(--g);}
+    .prob-mid{background:var(--cold);}
+    .prob-low{background:rgba(200,216,204,0.2);}
+    .prob-pct{
+      font-size:0.72rem;min-width:38px;text-align:right;
+      letter-spacing:0.05em;
+    }
 
-    /* SIGNAL TAGS */
+    /* SIGNAL */
     .over-tag{
-      display:inline-block;padding:0.1rem 0.45rem;
-      font-family:'Bangers',cursive;font-size:0.75rem;letter-spacing:0.08em;
-      border:2px solid rgba(255,255,255,0.2);
+      display:inline-block;
+      font-size:0.55rem;letter-spacing:0.2em;
+      padding:0.15rem 0.5rem;
+      text-transform:uppercase;
     }
-    .over-strong{background:var(--blue);color:#fff;border-color:var(--blue);}
-    .over-mid{background:var(--red);color:#fff;border-color:var(--red);}
+    .over-strong{
+      border:1px solid var(--g);color:var(--g);
+      background:rgba(0,255,148,0.06);
+    }
+    .over-mid{
+      border:1px solid var(--cold);color:var(--cold);
+      background:rgba(91,233,255,0.05);
+    }
 
-    /* HISTORY */
-    .hist-tabs{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.25rem;}
-    .hist-tab{
-      background:var(--surface);border:2px solid rgba(255,213,0,0.25);
-      padding:0.35rem 0.8rem;font-family:'Bangers',cursive;font-size:0.85rem;
-      letter-spacing:0.1em;color:rgba(255,213,0,0.55);cursor:pointer;transition:all 0.15s;
-      display:inline-flex;align-items:center;gap:0.4rem;
+    /* ══════════════ COMBO CARDS ══════════════ */
+    .combo-intro{
+      font-size:0.62rem;letter-spacing:0.1em;color:var(--muted);
+      margin-bottom:1.5rem;line-height:1.8;
     }
-    .hist-tab:hover,.hist-tab.active{background:var(--yellow);color:var(--ink);border-color:var(--yellow);}
-    .tab-rate{font-size:0.75rem;font-weight:700;}
+    .combo-tabs{
+      display:flex;gap:0;
+      border-bottom:1px solid var(--line);
+      margin-bottom:2rem;
+    }
+    .combo-tab{
+      background:none;border:none;border-bottom:1px solid transparent;
+      padding:0.6rem 1.25rem;
+      font-family:var(--mono);font-size:0.6rem;
+      letter-spacing:0.2em;color:var(--muted);
+      cursor:pointer;transition:all 0.2s;text-transform:uppercase;
+      margin-bottom:-1px;
+    }
+    .combo-tab:hover{color:var(--text);}
+    .combo-tab.active{color:var(--g);border-bottom-color:var(--g);}
+    .combo-grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+      gap:1px;background:var(--line);
+      border:1px solid var(--line);
+      margin-bottom:2rem;
+    }
+    .combo-card{
+      background:var(--panel);
+      padding:1.25rem;
+      transition:background 0.2s;
+      position:relative;overflow:hidden;
+    }
+    .combo-card::before{
+      content:'';position:absolute;top:0;left:0;width:2px;height:100%;
+      background:transparent;transition:background 0.2s;
+    }
+    .combo-card:hover{background:var(--g-ghost);}
+    .combo-card:hover::before{background:var(--g);}
+    .combo-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;}
+    .combo-rank{font-size:0.55rem;letter-spacing:0.3em;color:var(--muted);text-transform:uppercase;}
+    .combo-probs{text-align:right;}
+    .combo-prob-val{
+      font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;
+      line-height:1;letter-spacing:-0.01em;
+    }
+    .combo-cote{font-size:0.6rem;color:var(--muted);margin-top:0.15rem;}
+    .combo-cote strong{color:var(--text);}
+    .combo-prob-bar{height:1px;background:var(--line);overflow:hidden;margin-bottom:1rem;}
+    .combo-prob-fill{height:100%;transition:width 1s cubic-bezier(0.16,1,0.3,1);}
+    .combo-players{display:flex;flex-direction:column;gap:0.4rem;}
+    .combo-player{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0.3rem 0;
+      border-bottom:1px solid rgba(0,255,148,0.04);
+    }
+    .combo-player:last-child{border-bottom:none;}
+    .combo-pname{font-size:0.7rem;color:#fff;letter-spacing:0.03em;}
+    .combo-pteam{font-size:0.58rem;color:var(--muted);letter-spacing:0.15em;}
+    .combo-pprob{font-size:0.65rem;font-weight:500;}
+
+    /* ══════════════ HISTORY ══════════════ */
+    .hist-tabs{display:flex;flex-wrap:wrap;gap:1px;margin-bottom:2rem;background:var(--line);border:1px solid var(--line);}
+    .hist-tab{
+      background:var(--panel);
+      padding:0.5rem 1rem;
+      font-family:var(--mono);font-size:0.6rem;
+      letter-spacing:0.15em;color:var(--muted);
+      cursor:pointer;transition:all 0.15s;
+      display:inline-flex;align-items:center;gap:0.5rem;
+      text-transform:uppercase;border:none;
+    }
+    .hist-tab:hover{color:var(--text);background:var(--g-ghost);}
+    .hist-tab.active{color:var(--g);background:rgba(0,255,148,0.04);}
+    .tab-rate{font-size:0.6rem;font-weight:500;}
     .hist-panel-header{
       display:flex;justify-content:space-between;align-items:center;
-      margin-bottom:0.75rem;font-family:'Bangers',cursive;font-size:1rem;
-      letter-spacing:0.08em;color:var(--yellow);
-      padding:0.4rem 0.75rem;background:var(--ink);border:3px solid rgba(255,213,0,0.4);
+      padding:0.6rem 1rem;
+      border:1px solid var(--line);border-bottom:none;
+      background:var(--panel);
+      font-size:0.6rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;
     }
-    .panel-rate{color:var(--cyan);}
-    .res-cell{width:30px;text-align:center;}
-    .res-win{display:inline-block;background:var(--blue);color:#fff;font-family:'Bangers',cursive;font-size:0.9rem;padding:0 5px;border:2px solid rgba(255,255,255,0.2);}
-    .res-loss{display:inline-block;background:var(--red);color:#fff;font-family:'Bangers',cursive;font-size:0.9rem;padding:0 5px;border:2px solid rgba(255,255,255,0.2);}
-    .res-nogame{color:var(--muted);font-family:'Bangers',cursive;}
-    .res-pending{color:var(--yellow);font-family:'Bangers',cursive;}
+    .panel-rate{color:var(--g);}
+    .res-cell{width:36px;text-align:center;}
+    .res-win{
+      display:inline-block;font-size:0.55rem;letter-spacing:0.15em;
+      padding:0.1rem 0.4rem;border:1px solid var(--g);color:var(--g);
+      text-transform:uppercase;
+    }
+    .res-loss{
+      display:inline-block;font-size:0.55rem;letter-spacing:0.15em;
+      padding:0.1rem 0.4rem;border:1px solid rgba(255,107,53,0.5);color:var(--warn);
+      text-transform:uppercase;
+    }
+    .res-nogame{color:var(--muted);font-size:0.65rem;}
+    .res-pending{color:var(--cold);font-size:0.65rem;}
 
-    /* COMBOS */
-    .combo-intro{font-size:0.75rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6;font-weight:600;letter-spacing:0.05em;}
-    .combo-tabs{display:flex;gap:0;border-bottom:4px solid var(--yellow);margin-bottom:1.5rem;}
-    .combo-tab{
-      background:transparent;border:none;border-bottom:3px solid transparent;
-      padding:0.6rem 1.4rem;font-family:'Bangers',cursive;font-size:1rem;
-      letter-spacing:0.12em;color:rgba(255,213,0,0.45);cursor:pointer;transition:all 0.15s;
-    }
-    .combo-tab:hover{color:var(--yellow);}
-    .combo-tab.active{color:var(--ink);background:var(--yellow);}
-    .combo-card{
-      background:var(--surface);border:3px solid rgba(255,213,0,0.25);
-      box-shadow:5px 5px 0 var(--ink);padding:1.1rem 1.25rem;margin-bottom:1rem;
-      transition:transform 0.15s,box-shadow 0.15s,border-color 0.15s;
-    }
-    .combo-card:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink);border-color:var(--yellow);}
-    .combo-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;}
-    .combo-rank{font-family:'Bangers',cursive;font-size:2rem;color:var(--red);line-height:1;}
-    .combo-probs{display:flex;align-items:baseline;gap:1rem;}
-    .combo-prob-val{font-family:'Bangers',cursive;font-size:2.2rem;letter-spacing:0.03em;line-height:1;}
-    .combo-cote{font-size:0.7rem;color:var(--muted);font-weight:700;}
-    .combo-cote strong{color:var(--yellow);}
-    .combo-prob-bar{height:6px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,213,0,0.15);overflow:hidden;margin-bottom:0.85rem;}
-    .combo-prob-fill{height:100%;transition:width 0.9s cubic-bezier(0.34,1.56,0.64,1);}
-    .combo-players{display:flex;flex-wrap:wrap;gap:0.5rem;}
-    .combo-player{
-      background:var(--ink);border:2px solid rgba(255,213,0,0.2);
-      padding:0.3rem 0.65rem;display:flex;align-items:center;gap:0.5rem;
-      clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
-    }
-    .combo-pname{font-size:0.75rem;color:var(--yellow);font-weight:900;letter-spacing:0.04em;text-transform:uppercase;}
-    .combo-pteam{font-size:0.62rem;color:var(--muted);letter-spacing:0.08em;}
-    .combo-pprob{font-family:'Bangers',cursive;font-size:0.85rem;}
-
-    /* GLITCH on section titles — subtle */
-    @keyframes glitch-title{
-      0%,94%,100%{clip-path:none;transform:none;}
-      95%{clip-path:inset(20% 0 60% 0);transform:translateX(-4px);}
-      96%{clip-path:inset(60% 0 10% 0);transform:translateX(4px);}
-      97%{clip-path:none;transform:none;}
-    }
-    .section-title{animation:glitch-title 8s ease-in-out infinite;}
-
-    /* GLITCH on value badge */
-    @keyframes glitch-badge{
-      0%,85%,100%{text-shadow:none;transform:none;filter:none;}
-      86%{text-shadow:-2px 0 var(--cyan);transform:skewX(-2deg);}
-      87%{text-shadow:2px 0 var(--red);transform:skewX(2deg);}
-      88%{text-shadow:none;transform:none;}
-    }
-    .over-strong{animation:glitch-badge 5s ease-in-out infinite;}
-
+    /* DIVIDER */
     .glow-line{
-      height:4px;
-      background:repeating-linear-gradient(90deg,var(--yellow) 0,var(--yellow) 12px,var(--ink) 12px,var(--ink) 16px);
-      margin:2.5rem 0;opacity:0.5;
+      height:1px;
+      background:linear-gradient(90deg,transparent,var(--g),transparent);
+      margin:3rem 0;opacity:0.2;
     }
 
+    /* FOOTER */
     footer{
-      position:relative;z-index:10;text-align:center;padding:1.5rem;
-      border-top:4px solid var(--yellow);background:var(--ink);
-      font-family:'Bangers',cursive;font-size:0.85rem;letter-spacing:0.12em;color:var(--muted);
+      position:relative;z-index:10;
+      border-top:1px solid var(--line);
+      padding:1.5rem 2rem;
+      display:flex;justify-content:space-between;align-items:center;
+      background:var(--surface);
     }
-    footer a{color:var(--cyan);text-decoration:none;margin:0 0.5rem;}
-    footer a:hover{color:var(--yellow);}
+    .footer-left{font-size:0.58rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;}
+    .footer-right{display:flex;gap:1.5rem;}
+    footer a{
+      font-size:0.58rem;letter-spacing:0.15em;
+      color:var(--muted);text-decoration:none;text-transform:uppercase;
+      transition:color 0.2s;
+    }
+    footer a:hover{color:var(--g);}
+
+    /* CORNER DECORATIONS */
+    .corner-tl,.corner-tr,.corner-bl,.corner-br{
+      position:absolute;width:12px;height:12px;pointer-events:none;
+    }
+    .corner-tl{top:0;left:0;border-top:1px solid var(--g);border-left:1px solid var(--g);}
+    .corner-tr{top:0;right:0;border-top:1px solid var(--g);border-right:1px solid var(--g);}
+    .corner-bl{bottom:0;left:0;border-bottom:1px solid var(--g);border-left:1px solid var(--g);}
+    .corner-br{bottom:0;right:0;border-bottom:1px solid var(--g);border-right:1px solid var(--g);}
 
     @keyframes fadeIn{
-      from{opacity:0;transform:translateY(10px) skewX(-2deg);}
-      to{opacity:1;transform:translateY(0) skewX(0);}
+      from{opacity:0;transform:translateY(6px);}
+      to{opacity:1;transform:none;}
     }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="header-top">
-    <span class="header-top-label">&#9733; NHL STATS BOT v8.0 &#9733;</span>
-    <span class="header-top-label" style="font-size:0.75rem;opacity:0.7">POISSON MODEL · API OFFICIELLE</span>
+  <div class="sys-bar">
+    <span class="sys-id">NHL·SYSTEM / v8.0 / 09/03/2026</span>
+    <span class="sys-status"><span class="dot-pulse"></span>LIVE · 5 MATCHS ACTIFS</span>
+    <span class="sys-id">GEN 09/03/2026 a 20:51</span>
   </div>
-  <div class="header-main">
-    <h1>NHL <span class="accent">STATS</span> <span class="accent2">BOT</span></h1>
-    <p class="tagline">Analyse automatique · Probabilites Poisson · Top 20 joueurs du jour</p>
-    <div class="meta-pill">Mis a jour le <strong>09/03/2026 a 20:42</strong> &nbsp;|&nbsp; Matchs : <strong>5</strong></div>
-    
-    <div class="global-rate">
-      <div class="global-rate-label">TAUX DE REUSSITE GLOBAL</div>
-      <div class="global-rate-value" style="color:var(--blue)">63.2%</div>
-      <div class="global-rate-sub">12 picks gagnants sur 19 joues depuis le debut</div>
+  <div class="header-core">
+    <div class="header-left">
+      <div>
+        <div class="h-label">Top joueurs</div>
+        <div class="stat-block">
+          <span class="stat-val">20</span>
+          <span class="stat-sub">Analyses / jour</span>
+        </div>
+      </div>
+      <div>
+        <div class="h-label">Fenetre</div>
+        <div class="stat-block">
+          <span class="stat-val" style="font-size:1.8rem">15</span>
+          <span class="stat-sub">Matchs glissants</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="logo-center">
+      <h1>NHL<span class="slash">/</span>SYSTEM</h1>
+      <div class="sub-logo">Analyse probabiliste · Modele Poisson</div>
+      
+    <div class="global-rate" style="margin-top:1.2rem">
+      <div class="global-rate-label">Taux de reussite global</div>
+      <div class="global-rate-value" style="color:var(--g)">63.2%</div>
+      <div class="global-rate-sub">12 / 19 picks corrects</div>
+    </div>
+    </div>
+
+    <div class="header-right">
+      <div class="h-label" style="text-align:right">Matchs du 09/03/2026</div>
+      <div class="matchups-bar" style="margin:0;flex-direction:column;align-items:flex-start;gap:0.25rem;max-width:280px;font-size:0.6rem">
+        <span class="date-tag">&#9654; SCHEDULE</span>
+        <span class="games-list">LAK vs CBJ · NYR vs PHI · CGY vs WSH · UTA vs CHI · OTT vs VAN</span>
+      </div>
     </div>
   </div>
 </header>
 
 <div class="ticker">
   <div class="ticker-inner">
-    <span class="ticker-item"><strong>&#9733; MODE AUTO</strong> — Analyse tous les matchs NHL du jour</span>
-    <span class="ticker-item"><strong>&#9733; POISSON MODEL</strong> — P(Over 0.5 pts) par joueur</span>
-    <span class="ticker-item"><strong>&#9733; 15 MATCHS</strong> — Fenetre glissante game-logs</span>
-    <span class="ticker-item"><strong>&#9733; VALUE BETS</strong> — Detection automatique</span>
-    <span class="ticker-item"><strong>&#9733; API NHL</strong> — Donnees officielles nhle.com</span>
-    <span class="ticker-item"><strong>&#9733; MODE AUTO</strong> — Analyse tous les matchs NHL du jour</span>
-    <span class="ticker-item"><strong>&#9733; POISSON MODEL</strong> — P(Over 0.5 pts) par joueur</span>
-    <span class="ticker-item"><strong>&#9733; 15 MATCHS</strong> — Fenetre glissante game-logs</span>
-    <span class="ticker-item"><strong>&#9733; VALUE BETS</strong> — Detection automatique</span>
-    <span class="ticker-item"><strong>&#9733; API NHL</strong> — Donnees officielles nhle.com</span>
+    <span class="ticker-item"><em>SYS</em> Mode automatique · Analyse tous les matchs NHL</span>
+    <span class="ticker-item"><em>MDL</em> P(Over 0.5 pts) · Distribution de Poisson</span>
+    <span class="ticker-item"><em>DAT</em> Game-logs · Fenetre 15 matchs · Decay 0.93</span>
+    <span class="ticker-item"><em>ADJ</em> Gardiens · TOI · Injury report officiel</span>
+    <span class="ticker-item"><em>SRC</em> API NHL officielle · nhle.com</span>
+    <span class="ticker-item"><em>SYS</em> Mode automatique · Analyse tous les matchs NHL</span>
+    <span class="ticker-item"><em>MDL</em> P(Over 0.5 pts) · Distribution de Poisson</span>
+    <span class="ticker-item"><em>DAT</em> Game-logs · Fenetre 15 matchs · Decay 0.93</span>
+    <span class="ticker-item"><em>ADJ</em> Gardiens · TOI · Injury report officiel</span>
+    <span class="ticker-item"><em>SRC</em> API NHL officielle · nhle.com</span>
   </div>
 </div>
 
-<div class="tabs">
-  <button class="tab-btn active" onclick="showTab(this,'tab-today')">Aujourd hui</button>
-  <button class="tab-btn" onclick="showTab(this,'tab-combines')">Combines</button>
-  <button class="tab-btn" onclick="showTab(this,'tab-history')">Historique</button>
-  <button class="tab-btn" onclick="showTab(this,'tab-value')">Value Bets &#9733;</button>
-</div>
+<nav>
+  <span class="nav-prefix">MODULE</span>
+  <button class="tab-btn active" onclick="showTab(this,'tab-today')">01 · Aujourd hui</button>
+  <button class="tab-btn" onclick="showTab(this,'tab-combines')">02 · Combines</button>
+  <button class="tab-btn" onclick="showTab(this,'tab-value')">03 · Value Bets</button>
+  <button class="tab-btn" onclick="showTab(this,'tab-history')">04 · Historique</button>
+</nav>
 
 <main>
-  <!-- ONGLET AUJOURD HUI -->
+  
+
+  <!-- 01 AUJOURD HUI -->
   <div class="tab-content active" id="tab-today">
-    <div class="section-title">Matchs du jour</div>
-    
-    <div class="matchups-bar"><span>&#9660; 09/03/2026</span>LAK vs CBJ · NYR vs PHI · CGY vs WSH · UTA vs CHI · OTT vs VAN</div>
-    <div class="section-title">Top 20 · 09/03/2026</div>
+    <div class="section-title">
+      <span class="section-title-text">Classement du jour</span>
+      <span class="section-title-line"></span>
+      <span class="section-title-num">TOP 20</span>
+    </div>
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
             <th>#</th><th>Joueur</th><th>Equipe</th>
-            <th>Avg PTS</th><th>TOI moy</th>
+            <th>Avg PTS</th><th>TOI</th>
             <th>Expected</th><th>P(Over 0.5)</th><th>Cote</th><th>Signal</th>
           </tr>
         </thead>
@@ -401,11 +547,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-high" style="width:0%" data-target="71.9"></div>
               </div>
-              <span class="prob-pct glitch-on" style="color:var(--blue)">71.9%</span>
+              <span class="prob-pct" style="color:var(--g)">71.9%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td><span class="over-tag over-strong">UP FORT</span></td>
+          <td><span class="over-tag over-strong">SIGNAL+</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.05s both">
           <td class="rank">2</td>
@@ -419,11 +565,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-high" style="width:0%" data-target="71.2"></div>
               </div>
-              <span class="prob-pct glitch-on" style="color:var(--blue)">71.2%</span>
+              <span class="prob-pct" style="color:var(--g)">71.2%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td><span class="over-tag over-strong">UP FORT</span></td>
+          <td><span class="over-tag over-strong">SIGNAL+</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.1s both">
           <td class="rank">3</td>
@@ -437,11 +583,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="68.9"></div>
               </div>
-              <span class="prob-pct " style="color:var(--red)">68.9%</span>
+              <span class="prob-pct" style="color:var(--cold)">68.9%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td><span class="over-tag over-mid">UP MID</span></td>
+          <td><span class="over-tag over-mid">SIGNAL</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.15000000000000002s both">
           <td class="rank">4</td>
@@ -455,11 +601,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="68.2"></div>
               </div>
-              <span class="prob-pct " style="color:var(--red)">68.2%</span>
+              <span class="prob-pct" style="color:var(--cold)">68.2%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td><span class="over-tag over-mid">UP MID</span></td>
+          <td><span class="over-tag over-mid">SIGNAL</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.2s both">
           <td class="rank">5</td>
@@ -473,11 +619,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="67.9"></div>
               </div>
-              <span class="prob-pct " style="color:var(--red)">67.9%</span>
+              <span class="prob-pct" style="color:var(--cold)">67.9%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td><span class="over-tag over-mid">UP MID</span></td>
+          <td><span class="over-tag over-mid">SIGNAL</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.25s both">
           <td class="rank">6</td>
@@ -491,11 +637,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="67.3"></div>
               </div>
-              <span class="prob-pct " style="color:var(--red)">67.3%</span>
+              <span class="prob-pct" style="color:var(--cold)">67.3%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td><span class="over-tag over-mid">UP MID</span></td>
+          <td><span class="over-tag over-mid">SIGNAL</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.30000000000000004s both">
           <td class="rank">7</td>
@@ -509,11 +655,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="66.8"></div>
               </div>
-              <span class="prob-pct " style="color:var(--red)">66.8%</span>
+              <span class="prob-pct" style="color:var(--cold)">66.8%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td><span class="over-tag over-mid">UP MID</span></td>
+          <td><span class="over-tag over-mid">SIGNAL</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.35000000000000003s both">
           <td class="rank">8</td>
@@ -527,11 +673,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="64.5"></div>
               </div>
-              <span class="prob-pct " style="color:var(--red)">64.5%</span>
+              <span class="prob-pct" style="color:var(--cold)">64.5%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td><span class="over-tag over-mid">UP MID</span></td>
+          <td><span class="over-tag over-mid">SIGNAL</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.4s both">
           <td class="rank">9</td>
@@ -545,11 +691,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="64.4"></div>
               </div>
-              <span class="prob-pct " style="color:var(--red)">64.4%</span>
+              <span class="prob-pct" style="color:var(--cold)">64.4%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td><span class="over-tag over-mid">UP MID</span></td>
+          <td><span class="over-tag over-mid">SIGNAL</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.45s both">
           <td class="rank">10</td>
@@ -563,11 +709,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="63.5"></div>
               </div>
-              <span class="prob-pct " style="color:var(--red)">63.5%</span>
+              <span class="prob-pct" style="color:var(--cold)">63.5%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td><span class="over-tag over-mid">UP MID</span></td>
+          <td><span class="over-tag over-mid">SIGNAL</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.5s both">
           <td class="rank">11</td>
@@ -581,11 +727,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="62.7"></div>
               </div>
-              <span class="prob-pct " style="color:var(--red)">62.7%</span>
+              <span class="prob-pct" style="color:var(--cold)">62.7%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td><span class="over-tag over-mid">UP MID</span></td>
+          <td><span class="over-tag over-mid">SIGNAL</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.55s both">
           <td class="rank">12</td>
@@ -599,11 +745,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="61.6"></div>
               </div>
-              <span class="prob-pct " style="color:var(--red)">61.6%</span>
+              <span class="prob-pct" style="color:var(--cold)">61.6%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td>--</td>
+          <td>—</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.6000000000000001s both">
           <td class="rank">13</td>
@@ -617,11 +763,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="60.3"></div>
               </div>
-              <span class="prob-pct " style="color:var(--red)">60.3%</span>
+              <span class="prob-pct" style="color:var(--cold)">60.3%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td>--</td>
+          <td>—</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.65s both">
           <td class="rank">14</td>
@@ -635,11 +781,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="60.2"></div>
               </div>
-              <span class="prob-pct " style="color:var(--red)">60.2%</span>
+              <span class="prob-pct" style="color:var(--cold)">60.2%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td>--</td>
+          <td>—</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.7000000000000001s both">
           <td class="rank">15</td>
@@ -653,11 +799,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="59.2"></div>
               </div>
-              <span class="prob-pct " style="color:#aaa">59.2%</span>
+              <span class="prob-pct" style="color:var(--muted)">59.2%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td>--</td>
+          <td>—</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.75s both">
           <td class="rank">16</td>
@@ -671,11 +817,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="59.1"></div>
               </div>
-              <span class="prob-pct " style="color:#aaa">59.1%</span>
+              <span class="prob-pct" style="color:var(--muted)">59.1%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td>--</td>
+          <td>—</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.8s both">
           <td class="rank">17</td>
@@ -689,11 +835,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="58.9"></div>
               </div>
-              <span class="prob-pct " style="color:#aaa">58.9%</span>
+              <span class="prob-pct" style="color:var(--muted)">58.9%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td>--</td>
+          <td>—</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.8500000000000001s both">
           <td class="rank">18</td>
@@ -707,11 +853,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="58.4"></div>
               </div>
-              <span class="prob-pct " style="color:#aaa">58.4%</span>
+              <span class="prob-pct" style="color:var(--muted)">58.4%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td>--</td>
+          <td>—</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.9s both">
           <td class="rank">19</td>
@@ -725,11 +871,11 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="58.3"></div>
               </div>
-              <span class="prob-pct " style="color:#aaa">58.3%</span>
+              <span class="prob-pct" style="color:var(--muted)">58.3%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td>--</td>
+          <td>—</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.9500000000000001s both">
           <td class="rank">20</td>
@@ -743,229 +889,236 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="56.9"></div>
               </div>
-              <span class="prob-pct " style="color:#aaa">56.9%</span>
+              <span class="prob-pct" style="color:var(--muted)">56.9%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
-          <td>--</td>
+          <td>—</td>
         </tr></tbody>
       </table>
     </div>
   </div>
 
-  <!-- ONGLET COMBINES -->
+  <!-- 02 COMBINES -->
   <div class="tab-content" id="tab-combines">
     
-    <div class="section-title" style="margin-top:1.5rem">Combines du jour</div>
-    <p class="combo-intro">Combines optimaux issus du Top 20 · Pas deux joueurs du meme match · Probabilites independantes</p>
+    <div class="section-title" style="margin-top:0">
+      <span class="section-title-text">Combines du jour</span>
+      <span class="section-title-line"></span>
+      <span class="section-title-num">TOP 5 / TAILLE 2·3·4</span>
+    </div>
+    <p class="combo-intro">Combines optimaux issus du Top 20 · Contrainte : aucun doublon par match · Probabilites independantes</p>
     <div class="combo-tabs"><button class="combo-tab active" data-panel="combo-2" onclick="showCombo(this)" style="border-bottom-color:var(--cyan)">Double</button><button class="combo-tab " data-panel="combo-3" onclick="showCombo(this)" style="border-bottom-color:transparent">Triple</button><button class="combo-tab " data-panel="combo-4" onclick="showCombo(this)" style="border-bottom-color:transparent">Quadruple</button></div>
-    <div class="combo-panels"><div class="combo-panel" id="combo-2" style="display:block">
+    <div class="combo-panels"><div class="combo-panel combo-grid" id="combo-2" style="display:grid">
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#1</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#1a5cff">51.1%</span>
+                      <span class="combo-prob-val" style="color:var(--g)">51.1%</span>
                       <span class="combo-cote">cote theo. <strong>1.96</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#1a5cff" data-target="51.1"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--g)" data-target="51.1"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--g)">71.2%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#2</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#e63329">49.5%</span>
+                      <span class="combo-prob-val" style="color:var(--cold)">49.5%</span>
                       <span class="combo-cote">cote theo. <strong>2.02</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="49.5"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--cold)" data-target="49.5"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--cold)">68.9%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#3</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#e63329">49.0%</span>
+                      <span class="combo-prob-val" style="color:var(--cold)">49.0%</span>
                       <span class="combo-cote">cote theo. <strong>2.04</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="49.0"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--cold)" data-target="49.0"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--g)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--cold)">68.9%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#4</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#e63329">49.0%</span>
+                      <span class="combo-prob-val" style="color:var(--cold)">49.0%</span>
                       <span class="combo-cote">cote theo. <strong>2.04</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="49.0"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--cold)" data-target="49.0"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--cold)">68.2%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#5</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#e63329">48.8%</span>
+                      <span class="combo-prob-val" style="color:var(--cold)">48.8%</span>
                       <span class="combo-cote">cote theo. <strong>2.05</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="48.8"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--cold)" data-target="48.8"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Charlie Coyle</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--red)">67.9%</span></div></div>
-                </div></div><div class="combo-panel" id="combo-3" style="display:none">
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Charlie Coyle</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cold)">67.9%</span></div></div>
+                </div></div><div class="combo-panel combo-grid" id="combo-3" style="display:none">
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#1</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#e63329">35.2%</span>
+                      <span class="combo-prob-val" style="color:var(--cold)">35.2%</span>
                       <span class="combo-cote">cote theo. <strong>2.84</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="35.2"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--cold)" data-target="35.2"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--g)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--cold)">68.9%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#2</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#e63329">34.8%</span>
+                      <span class="combo-prob-val" style="color:var(--cold)">34.8%</span>
                       <span class="combo-cote">cote theo. <strong>2.87</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="34.8"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--cold)" data-target="34.8"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--g)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--cold)">68.2%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#3</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#e63329">33.7%</span>
+                      <span class="combo-prob-val" style="color:var(--cold)">33.7%</span>
                       <span class="combo-cote">cote theo. <strong>2.96</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="33.7"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--cold)" data-target="33.7"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--cold)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--cold)">68.2%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#4</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#e63329">33.6%</span>
+                      <span class="combo-prob-val" style="color:var(--cold)">33.6%</span>
                       <span class="combo-cote">cote theo. <strong>2.97</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="33.6"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--cold)" data-target="33.6"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Charlie Coyle</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--red)">67.9%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--cold)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Charlie Coyle</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cold)">67.9%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#5</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#e63329">33.4%</span>
+                      <span class="combo-prob-val" style="color:var(--cold)">33.4%</span>
                       <span class="combo-cote">cote theo. <strong>2.99</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="33.4"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--cold)" data-target="33.4"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div></div>
-                </div></div><div class="combo-panel" id="combo-4" style="display:none">
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--g)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--cold)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--cold)">68.2%</span></div></div>
+                </div></div><div class="combo-panel combo-grid" id="combo-4" style="display:none">
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#1</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#aaa">24.0%</span>
+                      <span class="combo-prob-val" style="color:var(--muted)">24.0%</span>
                       <span class="combo-cote">cote theo. <strong>4.16</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#aaa" data-target="24.0"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--muted)" data-target="24.0"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--g)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--cold)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--cold)">68.2%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#2</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#aaa">22.9%</span>
+                      <span class="combo-prob-val" style="color:var(--muted)">22.9%</span>
                       <span class="combo-cote">cote theo. <strong>4.36</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#aaa" data-target="22.9"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--muted)" data-target="22.9"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div><div class="combo-player"><span class="combo-pname">Charlie Coyle</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--red)">67.9%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--cold)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--cold)">68.2%</span></div><div class="combo-player"><span class="combo-pname">Charlie Coyle</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cold)">67.9%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#3</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#aaa">22.7%</span>
+                      <span class="combo-prob-val" style="color:var(--muted)">22.7%</span>
                       <span class="combo-cote">cote theo. <strong>4.40</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#aaa" data-target="22.7"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--muted)" data-target="22.7"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div><div class="combo-player"><span class="combo-pname">Kirill Marchenko</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--red)">67.3%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--cold)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--cold)">68.2%</span></div><div class="combo-player"><span class="combo-pname">Kirill Marchenko</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cold)">67.3%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#4</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#aaa">22.6%</span>
+                      <span class="combo-prob-val" style="color:var(--muted)">22.6%</span>
                       <span class="combo-cote">cote theo. <strong>4.43</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#aaa" data-target="22.6"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--muted)" data-target="22.6"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div><div class="combo-player"><span class="combo-pname">Artemi Panarin</span><span class="combo-pteam">LAK</span><span class="combo-pprob" style="color:var(--red)">66.8%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--cold)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--cold)">68.2%</span></div><div class="combo-player"><span class="combo-pname">Artemi Panarin</span><span class="combo-pteam">LAK</span><span class="combo-pprob" style="color:var(--cold)">66.8%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#5</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#aaa">22.4%</span>
+                      <span class="combo-prob-val" style="color:var(--muted)">22.4%</span>
                       <span class="combo-cote">cote theo. <strong>4.46</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#aaa" data-target="22.4"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:var(--muted)" data-target="22.4"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div><div class="combo-player"><span class="combo-pname">Mika Zibanejad</span><span class="combo-pteam">NYR</span><span class="combo-pprob" style="color:var(--red)">64.4%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--g)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--g)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--cold)">68.2%</span></div><div class="combo-player"><span class="combo-pname">Mika Zibanejad</span><span class="combo-pteam">NYR</span><span class="combo-pprob" style="color:var(--cold)">64.4%</span></div></div>
                 </div></div></div>
   </div>
 
-  <!-- ONGLET VALUE BETS -->
+  <!-- 03 VALUE BETS -->
   <div class="tab-content" id="tab-value">
-    <div class="section-title" style="margin-top:1.5rem">Value Bets &middot; 09/03/2026</div><div class="no-games" style="margin-top:1rem">Aucun value bet &ge; 5.0% detecte aujourd hui.</div>
+    <div class="section-title" style="margin-top:0"><span class="section-title-text">Value Bets · 09/03/2026</span><span class="section-title-line"></span></div><div class="no-games">Aucun value bet &ge; 5.0% detecte</div>
   </div>
 
-  <!-- ONGLET HISTORIQUE -->
+  <!-- 04 HISTORIQUE -->
   <div class="tab-content" id="tab-history">
-    <div class="section-title">Historique des picks</div>
-    <div class="hist-tabs"><button class="hist-tab" data-panel="day-2026-03-08" onclick="showPanel(this)">08/03 <span class="tab-rate" style="color:var(--blue)">63%</span></button></div>
+    <div class="section-title">
+      <span class="section-title-text">Historique des picks</span>
+      <span class="section-title-line"></span>
+    </div>
+    <div class="hist-tabs"><button class="hist-tab" data-panel="day-2026-03-08" onclick="showPanel(this)">08/03 <span class="tab-rate" style="color:var(--g)">63%</span></button></div>
     <div id="hist-panels">
         <div class="hist-panel" id="day-2026-03-08" style="display:none">
           <div class="hist-panel-header">
@@ -1147,11 +1300,11 @@
 </main>
 
 <footer>
-  <div>NHL STATS BOT &middot; v8.0 &middot; Python + NHL API officielle &middot; Genere le 09/03/2026 a 20:42</div>
-  <div style="margin-top:0.4rem">
+  <div class="footer-left">NHL·SYSTEM · v8.0 · Gen. 09/03/2026 a 20:51</div>
+  <div class="footer-right">
     <a href="https://github.com/Thiboulard/NHL-Stats" target="_blank">GitHub</a>
-    &middot; <a href="https://api-web.nhle.com" target="_blank">NHL API</a>
-    &middot; Modele : Poisson
+    <a href="https://api-web.nhle.com" target="_blank">NHL API</a>
+    <a href="#">Poisson Model</a>
   </div>
 </footer>
 
@@ -1169,15 +1322,12 @@
     var panel = document.getElementById(btn.dataset.panel);
     if (panel) panel.style.display = 'block';
   }
-  var comboColors = {'combo-2':'var(--blue)','combo-3':'var(--red)','combo-4':'var(--magenta)'};
   function showCombo(btn) {
-    document.querySelectorAll('.combo-tab').forEach(b => { b.classList.remove('active'); b.style.background='transparent'; b.style.color='rgba(255,213,0,0.45)'; });
+    document.querySelectorAll('.combo-tab').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.combo-panel').forEach(p => p.style.display = 'none');
     btn.classList.add('active');
-    btn.style.background = 'var(--yellow)';
-    btn.style.color = 'var(--ink)';
     var panel = document.getElementById(btn.dataset.panel);
-    if (panel) { panel.style.display = 'block'; animateComboBars(); }
+    if (panel) { panel.style.display = 'grid'; animateComboBars(); }
   }
   function animateComboBars() {
     setTimeout(function() {
