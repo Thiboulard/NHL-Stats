@@ -24,7 +24,7 @@ import base64
 
 LINE          = 0.5
 SEASON        = "20252026"
-LAST_N_GAMES  = 15
+LAST_N_GAMES  = 30
 RETRY_MAX     = 3
 RETRY_DELAY   = 3
 TOP_N         = 20
@@ -32,7 +32,7 @@ TOP_N         = 20
 # --- Filtres modele V7 ---
 MIN_TOI_FORWARD    = 12.0
 MIN_TOI_DEFENSEMAN = 18.0
-MIN_SCORE_RATE     = 0.30
+MIN_SCORE_RATE     = 0.25
 MIN_PROB_HISTORY   = 65    # seuil pour sauvegarder dans l historique
 
 # --- Gardiens ---
