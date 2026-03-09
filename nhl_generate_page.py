@@ -210,9 +210,9 @@ def compute_stats(logs, pos="F"):
         return None
     if (df["points"] >= 1).sum() / n < MIN_SCORE_RATE:
         return None
-    expected = round(avg_pts, 4)
+    expected = avg_pts
     p_over   = round(1 - poisson.cdf(LINE, expected), 4)
-    return {"n_games": n, "avg_points": round(avg_pts, 4), "avg_toi": round(avg_toi, 1),
+    return {"n_games": n, "avg_points": round(avg_pts, 3), "avg_toi": round(avg_toi, 1),
             "expected_pts": expected, "p_over": p_over}
 
 
