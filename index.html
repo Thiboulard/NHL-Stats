@@ -4,147 +4,500 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>NHL STATS BOT</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Condensed:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
   <style>
-    :root{--dark:#0a0e14;--navy:#0d1b2a;--blue:#0077b6;--cyan:#00b4d8;--gold:#f4a21e;--red:#c1121f;--text:#cdd6f4;--muted:#6b7a99;}
+    :root{
+      --ink:#0a0a0a;
+      --paper:#f5f0e8;
+      --red:#e63329;
+      --yellow:#ffd500;
+      --blue:#1a5cff;
+      --cyan:#00d4ff;
+      --magenta:#ff2d9b;
+      --white:#ffffff;
+      --muted:#555;
+      --border:3px solid var(--ink);
+    }
     *{margin:0;padding:0;box-sizing:border-box;}
-    body{background:var(--dark);color:var(--text);font-family:'JetBrains Mono',monospace;overflow-x:hidden;}
-    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-      background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(0,119,182,0.12) 0%,transparent 70%),
-                 radial-gradient(ellipse 60% 30% at 50% 100%,rgba(0,180,216,0.07) 0%,transparent 70%);}
-    header{position:relative;z-index:10;padding:2.5rem 2rem 1.5rem;text-align:center;border-bottom:1px solid rgba(0,180,216,0.15);}
-    .logo-line{display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:0.5rem;}
-    .puck{width:40px;height:40px;background:#111;border-radius:50%;border:3px solid var(--cyan);box-shadow:0 0 20px rgba(0,180,216,0.5);animation:pulse 3s ease-in-out infinite;}
-    @keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(0,180,216,0.5);}50%{box-shadow:0 0 40px rgba(0,180,216,0.9);}}
-    h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,7vw,5rem);letter-spacing:0.08em;color:#fff;text-shadow:0 0 40px rgba(0,180,216,0.4);line-height:1;}
-    h1 span{color:var(--cyan);}
-    .tagline{margin-top:0.5rem;font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;}
-    .meta-info{margin-top:0.5rem;font-size:0.68rem;color:var(--muted);}
-    .meta-info strong{color:var(--cyan);}
-    .global-rate{margin:1.5rem auto 0;max-width:420px;background:rgba(13,27,42,0.85);border:1px solid rgba(0,180,216,0.2);border-radius:6px;padding:1.25rem 1.5rem;text-align:center;}
-    .global-rate-label{font-size:0.58rem;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase;margin-bottom:0.4rem;}
-    .global-rate-value{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;letter-spacing:0.05em;line-height:1;}
-    .global-rate-sub{font-size:0.63rem;color:var(--muted);margin-top:0.35rem;}
-    .ticker{overflow:hidden;background:rgba(0,119,182,0.1);border-top:1px solid rgba(0,180,216,0.1);border-bottom:1px solid rgba(0,180,216,0.1);padding:0.4rem 0;margin-bottom:0;}
-    .ticker-inner{display:flex;gap:3rem;animation:ticker 28s linear infinite;white-space:nowrap;}
+
+    /* HALFTONE BACKGROUND */
+    body{
+      background-color:var(--ink);
+      color:var(--ink);
+      font-family:'Barlow Condensed',sans-serif;
+      overflow-x:hidden;
+      position:relative;
+    }
+    body::before{
+      content:'';
+      position:fixed;inset:0;pointer-events:none;z-index:0;
+      background-image:radial-gradient(circle,rgba(255,213,0,0.08) 1px,transparent 1px);
+      background-size:18px 18px;
+    }
+
+    /* SCAN LINE OVERLAY */
+    body::after{
+      content:'';
+      position:fixed;inset:0;pointer-events:none;z-index:1;
+      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);
+    }
+
+    /* ===== HEADER ===== */
+    header{
+      position:relative;z-index:10;
+      background:var(--yellow);
+      border-bottom:5px solid var(--ink);
+      padding:0;
+      overflow:hidden;
+    }
+    .header-top{
+      background:var(--red);
+      border-bottom:4px solid var(--ink);
+      padding:0.4rem 2rem;
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    .header-top-label{
+      font-family:'Bangers',cursive;
+      font-size:0.9rem;
+      letter-spacing:0.15em;
+      color:var(--yellow);
+    }
+    .header-main{
+      padding:1.5rem 2rem 1rem;
+      text-align:center;
+      position:relative;
+    }
+    /* diagonal stripe accent */
+    .header-main::before{
+      content:'';
+      position:absolute;top:0;left:0;right:0;bottom:0;
+      background:repeating-linear-gradient(
+        -45deg,
+        transparent,transparent 10px,
+        rgba(0,0,0,0.04) 10px,rgba(0,0,0,0.04) 20px
+      );
+      pointer-events:none;
+    }
+    h1{
+      font-family:'Bangers',cursive;
+      font-size:clamp(3.5rem,10vw,7rem);
+      letter-spacing:0.06em;
+      color:var(--ink);
+      line-height:0.9;
+      text-shadow:6px 6px 0 var(--red),-2px -2px 0 rgba(0,0,255,0.3);
+      position:relative;
+    }
+    h1 .accent{color:var(--red);text-shadow:4px 4px 0 var(--ink);}
+    h1 .accent2{color:var(--blue);text-shadow:4px 4px 0 var(--ink);}
+    .tagline{
+      font-family:'Bangers',cursive;
+      font-size:1.1rem;
+      letter-spacing:0.2em;
+      color:var(--ink);
+      margin-top:0.3rem;
+      opacity:0.7;
+    }
+    .meta-pill{
+      display:inline-block;
+      background:var(--ink);
+      color:var(--yellow);
+      font-family:'Share Tech Mono',monospace;
+      font-size:0.65rem;
+      letter-spacing:0.12em;
+      padding:0.25rem 0.75rem;
+      margin-top:0.5rem;
+      clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+    }
+    .meta-pill strong{color:var(--cyan);}
+
+    /* GLOBAL RATE — comic panel style */
+    .global-rate{
+      margin:1rem auto 0;
+      max-width:380px;
+      background:var(--white);
+      border:4px solid var(--ink);
+      box-shadow:6px 6px 0 var(--ink);
+      padding:1rem 1.5rem;
+      text-align:center;
+      position:relative;
+    }
+    .global-rate::before{
+      content:'STATS';
+      position:absolute;top:-14px;left:16px;
+      background:var(--blue);
+      color:var(--white);
+      font-family:'Bangers',cursive;
+      font-size:0.75rem;
+      letter-spacing:0.15em;
+      padding:0 0.5rem;
+      border:3px solid var(--ink);
+    }
+    .global-rate-label{font-size:0.55rem;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase;margin-bottom:0.2rem;font-weight:700;}
+    .global-rate-value{font-family:'Bangers',cursive;font-size:3.5rem;letter-spacing:0.05em;line-height:1;color:var(--ink);}
+    .global-rate-sub{font-size:0.65rem;color:var(--muted);margin-top:0.2rem;font-weight:600;}
+
+    /* ===== TICKER ===== */
+    .ticker{
+      overflow:hidden;
+      background:var(--ink);
+      border-top:3px solid var(--yellow);
+      border-bottom:3px solid var(--yellow);
+      padding:0.45rem 0;
+      position:relative;z-index:10;
+    }
+    .ticker-inner{display:flex;gap:0;animation:ticker 32s linear infinite;white-space:nowrap;}
     @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-    .ticker-item{font-size:0.65rem;letter-spacing:0.1em;color:var(--muted);}
+    .ticker-item{
+      font-family:'Bangers',cursive;
+      font-size:0.85rem;
+      letter-spacing:0.12em;
+      color:var(--yellow);
+      padding:0 2rem;
+      border-right:2px solid rgba(255,213,0,0.3);
+    }
     .ticker-item strong{color:var(--cyan);}
-    .tabs{display:flex;gap:0;border-bottom:1px solid rgba(0,180,216,0.15);background:rgba(10,14,20,0.95);position:sticky;top:0;z-index:50;}
-    .tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:0.85rem 1.75rem;font-family:'JetBrains Mono',monospace;font-size:0.72rem;letter-spacing:0.12em;color:var(--muted);cursor:pointer;transition:all 0.2s;text-transform:uppercase;}
-    .tab-btn:hover{color:var(--text);}
-    .tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan);}
-    .tab-content{display:none;padding-top:2rem;}
+    .ticker-sep{color:var(--red);padding:0 0.5rem;}
+
+    /* ===== NAVIGATION TABS ===== */
+    .tabs{
+      display:flex;
+      background:var(--ink);
+      position:sticky;top:0;z-index:50;
+      border-bottom:4px solid var(--yellow);
+      overflow-x:auto;
+    }
+    .tab-btn{
+      background:transparent;
+      border:none;
+      border-right:2px solid rgba(255,213,0,0.2);
+      padding:0.9rem 1.8rem;
+      font-family:'Bangers',cursive;
+      font-size:1rem;
+      letter-spacing:0.15em;
+      color:rgba(255,213,0,0.5);
+      cursor:pointer;
+      transition:all 0.15s;
+      white-space:nowrap;
+      position:relative;
+    }
+    .tab-btn:hover{color:var(--yellow);background:rgba(255,213,0,0.08);}
+    .tab-btn.active{
+      color:var(--ink);
+      background:var(--yellow);
+    }
+    .tab-btn.active::after{
+      content:'';
+      position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);
+      border:6px solid transparent;
+      border-top-color:var(--yellow);
+    }
+    .tab-content{display:none;}
     .tab-content.active{display:block;}
-    main{position:relative;z-index:10;max-width:1100px;margin:0 auto;padding:0 1.5rem 3rem;}
-    .section-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.12em;color:var(--cyan);margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;}
-    .section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(0,180,216,0.4),transparent);}
-    .matchups-bar{background:rgba(0,119,182,0.1);border:1px solid rgba(0,180,216,0.15);border-radius:4px;padding:0.75rem 1.25rem;margin-bottom:1.5rem;font-size:0.72rem;letter-spacing:0.06em;}
-    .matchups-bar span{color:var(--cyan);font-weight:600;margin-right:0.5rem;}
-    .no-games{background:rgba(193,18,31,0.1);border:1px solid rgba(193,18,31,0.3);border-radius:4px;padding:1rem;margin-bottom:1.5rem;text-align:center;color:var(--muted);font-size:0.75rem;}
-    .table-wrap{overflow-x:auto;border:1px solid rgba(0,180,216,0.15);border-radius:4px;margin-bottom:2rem;}
-    table{width:100%;border-collapse:collapse;font-size:0.72rem;}
-    thead tr{background:rgba(0,119,182,0.2);}
-    th{padding:0.65rem 1rem;text-align:left;letter-spacing:0.1em;color:var(--cyan);font-size:0.62rem;font-weight:600;text-transform:uppercase;white-space:nowrap;}
-    tbody tr{border-top:1px solid rgba(0,180,216,0.07);transition:background 0.15s;}
-    tbody tr:hover{background:rgba(0,119,182,0.1);}
-    td{padding:0.6rem 1rem;color:var(--text);white-space:nowrap;}
-    td.rank{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--muted);width:40px;}
-    td.name{color:#fff;font-weight:600;}
-    td.team{color:var(--cyan);font-size:0.62rem;letter-spacing:0.1em;}
+
+    /* ===== MAIN ===== */
+    main{
+      position:relative;z-index:10;
+      max-width:1140px;
+      margin:0 auto;
+      padding:2rem 1.5rem 4rem;
+    }
+
+    /* Section title — speech bubble style */
+    .section-title{
+      font-family:'Bangers',cursive;
+      font-size:1.6rem;
+      letter-spacing:0.1em;
+      color:var(--yellow);
+      margin-bottom:1.2rem;
+      margin-top:1.5rem;
+      display:inline-flex;
+      align-items:center;
+      gap:0.75rem;
+      background:var(--ink);
+      padding:0.3rem 1.2rem 0.3rem 0.8rem;
+      clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%);
+    }
+
+    /* Matchups bar */
+    .matchups-bar{
+      background:var(--white);
+      border:3px solid var(--ink);
+      box-shadow:4px 4px 0 var(--ink);
+      padding:0.6rem 1.1rem;
+      margin-bottom:1.5rem;
+      font-family:'Share Tech Mono',monospace;
+      font-size:0.72rem;
+      letter-spacing:0.06em;
+    }
+    .matchups-bar span{color:var(--red);font-weight:700;margin-right:0.5rem;}
+
+    .no-games{
+      background:var(--red);
+      border:3px solid var(--ink);
+      box-shadow:4px 4px 0 var(--ink);
+      padding:1rem;
+      margin-bottom:1.5rem;
+      text-align:center;
+      color:var(--white);
+      font-family:'Bangers',cursive;
+      font-size:1.1rem;
+      letter-spacing:0.1em;
+    }
+
+    /* ===== TABLE — comic panel ===== */
+    .table-wrap{
+      overflow-x:auto;
+      border:4px solid var(--ink);
+      box-shadow:7px 7px 0 var(--yellow);
+      margin-bottom:2.5rem;
+      background:var(--white);
+    }
+    table{width:100%;border-collapse:collapse;font-size:0.78rem;}
+    thead tr{background:var(--ink);}
+    th{
+      padding:0.7rem 0.9rem;
+      text-align:left;
+      font-family:'Bangers',cursive;
+      letter-spacing:0.12em;
+      color:var(--yellow);
+      font-size:0.8rem;
+      white-space:nowrap;
+      border-right:1px solid rgba(255,213,0,0.2);
+    }
+    tbody tr{border-bottom:2px solid var(--ink);transition:background 0.1s;}
+    tbody tr:nth-child(even){background:#f0ebe0;}
+    tbody tr:hover{background:var(--yellow);}
+    td{padding:0.6rem 0.9rem;color:var(--ink);white-space:nowrap;font-weight:600;border-right:1px solid rgba(0,0,0,0.08);}
+    td.rank{
+      font-family:'Bangers',cursive;
+      font-size:1.4rem;
+      color:var(--red);
+      width:40px;
+      text-align:center;
+    }
+    td.name{color:var(--ink);font-weight:900;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.03em;}
+    td.team{
+      color:var(--blue);
+      font-family:'Bangers',cursive;
+      font-size:0.9rem;
+      letter-spacing:0.1em;
+    }
+
+    /* PROB BAR */
     .prob-bar-wrap{display:flex;align-items:center;gap:0.5rem;}
-    .prob-bar{flex:1;height:4px;background:rgba(255,255,255,0.07);border-radius:2px;overflow:hidden;min-width:60px;}
-    .prob-fill{height:100%;border-radius:2px;transition:width 0.8s ease;}
-    .prob-high{background:linear-gradient(90deg,var(--cyan),#48cae4);}
-    .prob-mid{background:linear-gradient(90deg,var(--gold),#ffc107);}
-    .prob-low{background:linear-gradient(90deg,var(--red),#e63946);}
-    .prob-pct{font-size:0.68rem;min-width:36px;text-align:right;}
-    .over-tag{display:inline-block;padding:0.12rem 0.35rem;font-size:0.58rem;border-radius:2px;font-weight:600;letter-spacing:0.08em;}
-    .over-strong{background:rgba(0,180,216,0.2);color:var(--cyan);}
-    .over-mid{background:rgba(244,162,30,0.2);color:var(--gold);}
+    .prob-bar{
+      flex:1;height:8px;
+      background:rgba(0,0,0,0.12);
+      border:2px solid var(--ink);
+      overflow:hidden;
+      min-width:55px;
+    }
+    .prob-fill{height:100%;transition:width 0.8s cubic-bezier(0.34,1.56,0.64,1);}
+    .prob-high{background:var(--blue);}
+    .prob-mid{background:var(--red);}
+    .prob-low{background:#aaa;}
+    .prob-pct{
+      font-family:'Bangers',cursive;
+      font-size:0.9rem;
+      min-width:38px;
+      text-align:right;
+    }
+
+    /* SIGNAL TAGS */
+    .over-tag{
+      display:inline-block;
+      padding:0.1rem 0.45rem;
+      font-family:'Bangers',cursive;
+      font-size:0.75rem;
+      letter-spacing:0.08em;
+      border:2px solid var(--ink);
+    }
+    .over-strong{background:var(--blue);color:var(--white);}
+    .over-mid{background:var(--red);color:var(--white);}
+
+    /* ===== HISTORY TABS ===== */
     .hist-tabs{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.25rem;}
-    .hist-tab{background:rgba(13,27,42,0.8);border:1px solid rgba(0,180,216,0.15);border-radius:3px;padding:0.35rem 0.75rem;font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--muted);cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:0.4rem;}
-    .hist-tab:hover,.hist-tab.active{background:rgba(0,119,182,0.2);color:var(--text);border-color:rgba(0,180,216,0.4);}
-    .tab-rate{font-size:0.62rem;font-weight:600;}
-    .hist-panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;font-size:0.7rem;color:var(--muted);padding:0 0.25rem;}
-    .panel-rate{color:var(--cyan);font-weight:600;}
+    .hist-tab{
+      background:var(--ink);
+      border:2px solid rgba(255,213,0,0.3);
+      padding:0.35rem 0.8rem;
+      font-family:'Bangers',cursive;
+      font-size:0.85rem;
+      letter-spacing:0.1em;
+      color:rgba(255,213,0,0.6);
+      cursor:pointer;
+      transition:all 0.15s;
+      display:inline-flex;align-items:center;gap:0.4rem;
+    }
+    .hist-tab:hover,.hist-tab.active{
+      background:var(--yellow);
+      color:var(--ink);
+      border-color:var(--yellow);
+    }
+    .tab-rate{font-size:0.75rem;font-weight:700;}
+    .hist-panel-header{
+      display:flex;justify-content:space-between;align-items:center;
+      margin-bottom:0.75rem;
+      font-family:'Bangers',cursive;
+      font-size:1rem;
+      letter-spacing:0.08em;
+      color:var(--yellow);
+      padding:0.4rem 0.75rem;
+      background:var(--ink);
+      border:3px solid var(--yellow);
+    }
+    .panel-rate{color:var(--cyan);}
     .res-cell{width:30px;text-align:center;}
-    .res-win{color:#00b4d8;font-weight:800;}
-    .res-loss{color:#c1121f;font-weight:800;}
-    .res-nogame{color:var(--muted);}
-    .res-pending{color:var(--gold);}
-    .glow-line{height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);margin:2rem 0;opacity:0.3;}
-    footer{position:relative;z-index:10;text-align:center;padding:1.5rem;border-top:1px solid rgba(0,180,216,0.1);font-size:0.62rem;color:var(--muted);letter-spacing:0.1em;}
-    footer a{color:var(--cyan);text-decoration:none;margin:0 0.5rem;}
-    .combo-intro{font-size:0.68rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6;}
-    .combo-tabs{display:flex;gap:0;border-bottom:1px solid rgba(0,180,216,0.15);margin-bottom:1.5rem;}
-    .combo-tab{background:none;border:none;border-bottom:2px solid transparent;padding:0.6rem 1.25rem;font-family:'JetBrains Mono',monospace;font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);cursor:pointer;transition:all 0.2s;text-transform:uppercase;}
-    .combo-tab:hover{color:var(--text);}
-    .combo-tab.active{color:#fff;}
-    .combo-card{background:rgba(13,27,42,0.7);border:1px solid rgba(0,180,216,0.12);border-radius:5px;padding:1.1rem 1.25rem;margin-bottom:0.85rem;transition:border-color 0.2s;}
-    .combo-card:hover{border-color:rgba(0,180,216,0.3);}
+    .res-win{
+      display:inline-block;
+      background:var(--blue);color:var(--white);
+      font-family:'Bangers',cursive;font-size:0.9rem;
+      padding:0 5px;border:2px solid var(--ink);
+    }
+    .res-loss{
+      display:inline-block;
+      background:var(--red);color:var(--white);
+      font-family:'Bangers',cursive;font-size:0.9rem;
+      padding:0 5px;border:2px solid var(--ink);
+    }
+    .res-nogame{color:#aaa;font-family:'Bangers',cursive;}
+    .res-pending{color:var(--yellow);font-family:'Bangers',cursive;}
+
+    /* ===== COMBO CARDS ===== */
+    .combo-intro{font-size:0.75rem;color:var(--yellow);margin-bottom:1.25rem;line-height:1.6;font-weight:600;letter-spacing:0.05em;}
+    .combo-tabs{display:flex;gap:0;border-bottom:4px solid var(--yellow);margin-bottom:1.5rem;}
+    .combo-tab{
+      background:transparent;border:none;
+      border-bottom:3px solid transparent;
+      padding:0.6rem 1.4rem;
+      font-family:'Bangers',cursive;
+      font-size:1rem;letter-spacing:0.12em;
+      color:rgba(255,213,0,0.5);cursor:pointer;transition:all 0.15s;
+    }
+    .combo-tab:hover{color:var(--yellow);}
+    .combo-tab.active{color:var(--ink);background:var(--yellow);}
+    .combo-card{
+      background:var(--white);
+      border:4px solid var(--ink);
+      box-shadow:5px 5px 0 var(--ink);
+      padding:1.1rem 1.25rem;
+      margin-bottom:1rem;
+      transition:transform 0.15s,box-shadow 0.15s;
+      position:relative;
+    }
+    .combo-card:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink);}
     .combo-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;}
-    .combo-rank{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--muted);line-height:1;}
+    .combo-rank{
+      font-family:'Bangers',cursive;font-size:2rem;
+      color:var(--red);line-height:1;
+    }
     .combo-probs{display:flex;align-items:baseline;gap:1rem;}
-    .combo-prob-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:0.03em;line-height:1;}
-    .combo-cote{font-size:0.65rem;color:var(--muted);}
-    .combo-cote strong{color:var(--gold);}
-    .combo-prob-bar{height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-bottom:0.85rem;}
-    .combo-prob-fill{height:100%;border-radius:2px;transition:width 0.9s ease;}
+    .combo-prob-val{font-family:'Bangers',cursive;font-size:2.2rem;letter-spacing:0.03em;line-height:1;}
+    .combo-cote{font-size:0.7rem;color:var(--muted);font-weight:700;}
+    .combo-cote strong{color:var(--red);}
+    .combo-prob-bar{
+      height:6px;
+      background:rgba(0,0,0,0.1);
+      border:2px solid var(--ink);
+      overflow:hidden;margin-bottom:0.85rem;
+    }
+    .combo-prob-fill{height:100%;transition:width 0.9s cubic-bezier(0.34,1.56,0.64,1);}
     .combo-players{display:flex;flex-wrap:wrap;gap:0.5rem;}
-    .combo-player{background:rgba(0,0,0,0.3);border:1px solid rgba(0,180,216,0.1);border-radius:3px;padding:0.3rem 0.6rem;display:flex;align-items:center;gap:0.5rem;}
-    .combo-pname{font-size:0.7rem;color:#fff;font-weight:600;}
-    .combo-pteam{font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;}
-    .combo-pprob{font-size:0.65rem;font-weight:600;}
-    @keyframes fadeIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
+    .combo-player{
+      background:var(--ink);
+      border:2px solid var(--ink);
+      padding:0.3rem 0.65rem;
+      display:flex;align-items:center;gap:0.5rem;
+      clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
+    }
+    .combo-pname{font-size:0.75rem;color:var(--yellow);font-weight:900;letter-spacing:0.04em;text-transform:uppercase;}
+    .combo-pteam{font-size:0.62rem;color:rgba(255,213,0,0.5);letter-spacing:0.08em;}
+    .combo-pprob{font-family:'Bangers',cursive;font-size:0.85rem;}
+
+    /* DIVIDER */
+    .glow-line{
+      height:4px;
+      background:repeating-linear-gradient(90deg,var(--yellow) 0,var(--yellow) 12px,var(--ink) 12px,var(--ink) 16px);
+      margin:2.5rem 0;
+      opacity:0.6;
+    }
+
+    /* ===== FOOTER ===== */
+    footer{
+      position:relative;z-index:10;
+      text-align:center;
+      padding:1.5rem;
+      border-top:4px solid var(--yellow);
+      background:var(--ink);
+      font-family:'Bangers',cursive;
+      font-size:0.85rem;
+      letter-spacing:0.12em;
+      color:rgba(255,213,0,0.5);
+    }
+    footer a{color:var(--cyan);text-decoration:none;margin:0 0.5rem;}
+    footer a:hover{color:var(--yellow);}
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(10px) skewX(-2deg);}
+      to{opacity:1;transform:translateY(0) skewX(0deg);}
+    }
+    @keyframes glitch{
+      0%,100%{text-shadow:6px 6px 0 var(--red),-2px -2px 0 rgba(0,0,255,0.3);}
+      25%{text-shadow:-4px 4px 0 var(--cyan),4px -2px 0 var(--red);}
+      75%{text-shadow:4px -4px 0 var(--magenta),-2px 2px 0 var(--blue);}
+    }
+    h1{animation:glitch 6s ease-in-out infinite;}
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo-line">
-    <div class="puck"></div>
-    <h1>NHL <span>STATS</span> BOT</h1>
-    <div class="puck"></div>
+  <div class="header-top">
+    <span class="header-top-label">&#9733; NHL STATS BOT v8.0 &#9733;</span>
+    <span class="header-top-label" style="font-size:0.75rem;opacity:0.7">POISSON MODEL · API OFFICIELLE</span>
   </div>
-  <p class="tagline">Analyse automatique · Probabilites Poisson · Top 20 joueurs du jour</p>
-  <p class="meta-info">Mis a jour le <strong>09/03/2026 a 19:59</strong> · Matchs : <strong>5</strong></p>
-  
+  <div class="header-main">
+    <h1>NHL <span class="accent">STATS</span> <span class="accent2">BOT</span></h1>
+    <p class="tagline">Analyse automatique · Probabilites Poisson · Top 20 joueurs du jour</p>
+    <div class="meta-pill">Mis a jour le <strong>09/03/2026 a 20:29</strong> &nbsp;|&nbsp; Matchs : <strong>5</strong></div>
+    
     <div class="global-rate">
       <div class="global-rate-label">TAUX DE REUSSITE GLOBAL</div>
-      <div class="global-rate-value" style="color:#00b4d8">63.2%</div>
+      <div class="global-rate-value" style="color:var(--blue)">63.2%</div>
       <div class="global-rate-sub">12 picks gagnants sur 19 joues depuis le debut</div>
     </div>
+  </div>
 </header>
 
 <div class="ticker">
   <div class="ticker-inner">
-    <span class="ticker-item"><strong>MODE AUTO</strong> — Analyse tous les matchs NHL du jour</span>
-    <span class="ticker-item"><strong>POISSON MODEL</strong> — P(Over 0.5 pts) calcule par joueur</span>
-    <span class="ticker-item"><strong>15 MATCHS</strong> — Fenetre glissante de game-logs</span>
-    <span class="ticker-item"><strong>TELEGRAM</strong> — Envoi automatique du Top 20</span>
-    <span class="ticker-item"><strong>API NHL</strong> — Donnees officielles nhle.com</span>
-    <span class="ticker-item"><strong>MODE AUTO</strong> — Analyse tous les matchs NHL du jour</span>
-    <span class="ticker-item"><strong>POISSON MODEL</strong> — P(Over 0.5 pts) calcule par joueur</span>
-    <span class="ticker-item"><strong>15 MATCHS</strong> — Fenetre glissante de game-logs</span>
-    <span class="ticker-item"><strong>TELEGRAM</strong> — Envoi automatique du Top 20</span>
-    <span class="ticker-item"><strong>API NHL</strong> — Donnees officielles nhle.com</span>
+    <span class="ticker-item"><strong>&#9733; MODE AUTO</strong> — Analyse tous les matchs NHL du jour</span>
+    <span class="ticker-item"><strong>&#9733; POISSON MODEL</strong> — P(Over 0.5 pts) par joueur</span>
+    <span class="ticker-item"><strong>&#9733; 15 MATCHS</strong> — Fenetre glissante game-logs</span>
+    <span class="ticker-item"><strong>&#9733; VALUE BETS</strong> — Detection automatique</span>
+    <span class="ticker-item"><strong>&#9733; API NHL</strong> — Donnees officielles nhle.com</span>
+    <span class="ticker-item"><strong>&#9733; MODE AUTO</strong> — Analyse tous les matchs NHL du jour</span>
+    <span class="ticker-item"><strong>&#9733; POISSON MODEL</strong> — P(Over 0.5 pts) par joueur</span>
+    <span class="ticker-item"><strong>&#9733; 15 MATCHS</strong> — Fenetre glissante game-logs</span>
+    <span class="ticker-item"><strong>&#9733; VALUE BETS</strong> — Detection automatique</span>
+    <span class="ticker-item"><strong>&#9733; API NHL</strong> — Donnees officielles nhle.com</span>
   </div>
 </div>
 
-<main>
-  <div class="tabs">
-    <button class="tab-btn active" onclick="showTab(this,'tab-today')">Aujourd hui</button>
-    <button class="tab-btn" onclick="showTab(this,'tab-combines')">Combines</button>
-    <button class="tab-btn" onclick="showTab(this,'tab-history')">Historique</button>
-    <button class="tab-btn" onclick="showTab(this,'tab-value')">Value Bets &#9733;</button>
-  </div>
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab(this,'tab-today')">Aujourd hui</button>
+  <button class="tab-btn" onclick="showTab(this,'tab-combines')">Combines</button>
+  <button class="tab-btn" onclick="showTab(this,'tab-history')">Historique</button>
+  <button class="tab-btn" onclick="showTab(this,'tab-value')">Value Bets &#9733;</button>
+</div>
 
+<main>
   <!-- ONGLET AUJOURD HUI -->
   <div class="tab-content active" id="tab-today">
-    <div class="section-title" style="margin-top:1.5rem">Matchs du jour</div>
+    <div class="section-title">Matchs du jour</div>
     
-    <div class="matchups-bar"><span>📅 09/03/2026</span>LAK vs CBJ · NYR vs PHI · CGY vs WSH · UTA vs CHI · OTT vs VAN</div>
+    <div class="matchups-bar"><span>&#9660; 09/03/2026</span>LAK vs CBJ · NYR vs PHI · CGY vs WSH · UTA vs CHI · OTT vs VAN</div>
     <div class="section-title">Top 20 · 09/03/2026</div>
     <div class="table-wrap">
       <table>
@@ -158,71 +511,71 @@
         <tbody>
         <tr style="animation:fadeIn 0.4s ease 0.0s both">
           <td class="rank">1</td>
-          <td class="name">Zach Werenski</td>
-          <td class="team">CBJ</td>
-          <td>1.29</td>
-          <td>26.4</td>
-          <td>1.29</td>
+          <td class="name">Clayton Keller</td>
+          <td class="team">UTA</td>
+          <td>1.27</td>
+          <td>18.7</td>
+          <td>1.27</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-high" style="width:0%" data-target="72.5"></div>
+                <div class="prob-fill prob-high" style="width:0%" data-target="71.9"></div>
               </div>
-              <span class="prob-pct" style="color:var(--cyan)">72.5%</span>
+              <span class="prob-pct" style="color:var(--blue)">71.9%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.42</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td><span class="over-tag over-strong">UP FORT</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.05s both">
           <td class="rank">2</td>
-          <td class="name">Clayton Keller</td>
-          <td class="team">UTA</td>
-          <td>1.23</td>
-          <td>18.8</td>
-          <td>1.23</td>
+          <td class="name">Zach Werenski</td>
+          <td class="team">CBJ</td>
+          <td>1.24</td>
+          <td>26.2</td>
+          <td>1.24</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-high" style="width:0%" data-target="70.8"></div>
+                <div class="prob-fill prob-high" style="width:0%" data-target="71.2"></div>
               </div>
-              <span class="prob-pct" style="color:var(--cyan)">70.8%</span>
+              <span class="prob-pct" style="color:var(--blue)">71.2%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.44</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td><span class="over-tag over-strong">UP FORT</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.1s both">
           <td class="rank">3</td>
-          <td class="name">Tim Stützle</td>
-          <td class="team">OTT</td>
-          <td>1.18</td>
-          <td>20.2</td>
-          <td>1.18</td>
+          <td class="name">Travis Konecny</td>
+          <td class="team">PHI</td>
+          <td>1.17</td>
+          <td>19.1</td>
+          <td>1.17</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-mid" style="width:0%" data-target="69.2"></div>
+                <div class="prob-fill prob-mid" style="width:0%" data-target="68.9"></div>
               </div>
-              <span class="prob-pct" style="color:var(--gold)">69.2%</span>
+              <span class="prob-pct" style="color:var(--red)">68.9%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.43</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.15000000000000002s both">
           <td class="rank">4</td>
-          <td class="name">Travis Konecny</td>
-          <td class="team">PHI</td>
+          <td class="name">Tim Stützle</td>
+          <td class="team">OTT</td>
           <td>1.14</td>
-          <td>19.1</td>
+          <td>20.4</td>
           <td>1.14</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-mid" style="width:0%" data-target="67.9"></div>
+                <div class="prob-fill prob-mid" style="width:0%" data-target="68.2"></div>
               </div>
-              <span class="prob-pct" style="color:var(--gold)">67.9%</span>
+              <span class="prob-pct" style="color:var(--red)">68.2%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -230,17 +583,17 @@
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.2s both">
           <td class="rank">5</td>
-          <td class="name">Artemi Panarin</td>
-          <td class="team">LAK</td>
-          <td>1.12</td>
-          <td>21.1</td>
-          <td>1.12</td>
+          <td class="name">Charlie Coyle</td>
+          <td class="team">CBJ</td>
+          <td>1.14</td>
+          <td>18.3</td>
+          <td>1.14</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-mid" style="width:0%" data-target="67.3"></div>
+                <div class="prob-fill prob-mid" style="width:0%" data-target="67.9"></div>
               </div>
-              <span class="prob-pct" style="color:var(--gold)">67.3%</span>
+              <span class="prob-pct" style="color:var(--red)">67.9%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -248,161 +601,161 @@
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.25s both">
           <td class="rank">6</td>
-          <td class="name">Charlie Coyle</td>
+          <td class="name">Kirill Marchenko</td>
           <td class="team">CBJ</td>
-          <td>1.11</td>
-          <td>18.2</td>
-          <td>1.11</td>
+          <td>1.12</td>
+          <td>18.3</td>
+          <td>1.12</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-mid" style="width:0%" data-target="66.9"></div>
+                <div class="prob-fill prob-mid" style="width:0%" data-target="67.3"></div>
               </div>
-              <span class="prob-pct" style="color:var(--gold)">66.9%</span>
+              <span class="prob-pct" style="color:var(--red)">67.3%</span>
             </div>
           </td>
-          <td><span style="color:var(--gold);font-weight:600">1.8</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.30000000000000004s both">
           <td class="rank">7</td>
-          <td class="name">Kirill Marchenko</td>
-          <td class="team">CBJ</td>
-          <td>1.07</td>
-          <td>18.4</td>
-          <td>1.07</td>
+          <td class="name">Artemi Panarin</td>
+          <td class="team">LAK</td>
+          <td>1.10</td>
+          <td>21.3</td>
+          <td>1.10</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-mid" style="width:0%" data-target="65.6"></div>
+                <div class="prob-fill prob-mid" style="width:0%" data-target="66.8"></div>
               </div>
-              <span class="prob-pct" style="color:var(--gold)">65.6%</span>
+              <span class="prob-pct" style="color:var(--red)">66.8%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.5</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.35000000000000003s both">
           <td class="rank">8</td>
           <td class="name">Dylan Guenther</td>
           <td class="team">UTA</td>
-          <td>1.05</td>
+          <td>1.04</td>
           <td>17.1</td>
-          <td>1.06</td>
+          <td>1.04</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-mid" style="width:0%" data-target="65.2"></div>
+                <div class="prob-fill prob-mid" style="width:0%" data-target="64.5"></div>
               </div>
-              <span class="prob-pct" style="color:var(--gold)">65.2%</span>
+              <span class="prob-pct" style="color:var(--red)">64.5%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.55</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.4s both">
           <td class="rank">9</td>
-          <td class="name">Brady Tkachuk</td>
-          <td class="team">OTT</td>
+          <td class="name">Mika Zibanejad</td>
+          <td class="team">NYR</td>
           <td>1.03</td>
-          <td>16.6</td>
+          <td>21.8</td>
           <td>1.03</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-mid" style="width:0%" data-target="64.3"></div>
+                <div class="prob-fill prob-mid" style="width:0%" data-target="64.4"></div>
               </div>
-              <span class="prob-pct" style="color:var(--gold)">64.3%</span>
+              <span class="prob-pct" style="color:var(--red)">64.4%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.48</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.45s both">
           <td class="rank">10</td>
-          <td class="name">Mika Zibanejad</td>
-          <td class="team">NYR</td>
-          <td>0.99</td>
-          <td>21.6</td>
-          <td>0.99</td>
+          <td class="name">Nick Schmaltz</td>
+          <td class="team">UTA</td>
+          <td>1.01</td>
+          <td>19.8</td>
+          <td>1.01</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-mid" style="width:0%" data-target="62.7"></div>
+                <div class="prob-fill prob-mid" style="width:0%" data-target="63.5"></div>
               </div>
-              <span class="prob-pct" style="color:var(--gold)">62.7%</span>
+              <span class="prob-pct" style="color:var(--red)">63.5%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.46</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.5s both">
           <td class="rank">11</td>
-          <td class="name">Nick Schmaltz</td>
-          <td class="team">UTA</td>
-          <td>0.98</td>
-          <td>20.0</td>
+          <td class="name">Brady Tkachuk</td>
+          <td class="team">OTT</td>
+          <td>0.99</td>
+          <td>16.6</td>
           <td>0.99</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="62.7"></div>
               </div>
-              <span class="prob-pct" style="color:var(--gold)">62.7%</span>
+              <span class="prob-pct" style="color:var(--red)">62.7%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.62</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.55s both">
           <td class="rank">12</td>
           <td class="name">Adrian Kempe</td>
           <td class="team">LAK</td>
-          <td>0.94</td>
+          <td>0.96</td>
           <td>19.4</td>
-          <td>0.94</td>
+          <td>0.96</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-mid" style="width:0%" data-target="60.9"></div>
+                <div class="prob-fill prob-mid" style="width:0%" data-target="61.6"></div>
               </div>
-              <span class="prob-pct" style="color:var(--gold)">60.9%</span>
+              <span class="prob-pct" style="color:var(--red)">61.6%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.49</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td>--</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.6000000000000001s both">
           <td class="rank">13</td>
-          <td class="name">Connor Bedard</td>
-          <td class="team">CHI</td>
-          <td>0.91</td>
-          <td>20.8</td>
-          <td>0.91</td>
+          <td class="name">Vincent Trocheck</td>
+          <td class="team">NYR</td>
+          <td>0.92</td>
+          <td>21.2</td>
+          <td>0.92</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-low" style="width:0%" data-target="59.6"></div>
+                <div class="prob-fill prob-mid" style="width:0%" data-target="60.3"></div>
               </div>
-              <span class="prob-pct" style="color:var(--muted)">59.6%</span>
+              <span class="prob-pct" style="color:var(--red)">60.3%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.55</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td>--</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.65s both">
           <td class="rank">14</td>
-          <td class="name">J.T. Miller</td>
-          <td class="team">NYR</td>
-          <td>0.90</td>
-          <td>20.6</td>
-          <td>0.90</td>
+          <td class="name">Adam Fantilli</td>
+          <td class="team">CBJ</td>
+          <td>0.92</td>
+          <td>18.9</td>
+          <td>0.92</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-low" style="width:0%" data-target="59.5"></div>
+                <div class="prob-fill prob-mid" style="width:0%" data-target="60.2"></div>
               </div>
-              <span class="prob-pct" style="color:var(--muted)">59.5%</span>
+              <span class="prob-pct" style="color:var(--red)">60.2%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -410,110 +763,110 @@
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.7000000000000001s both">
           <td class="rank">15</td>
-          <td class="name">Dylan Cozens</td>
-          <td class="team">OTT</td>
+          <td class="name">J.T. Miller</td>
+          <td class="team">NYR</td>
           <td>0.90</td>
-          <td>16.4</td>
+          <td>20.8</td>
           <td>0.90</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="59.2"></div>
               </div>
-              <span class="prob-pct" style="color:var(--muted)">59.2%</span>
+              <span class="prob-pct" style="color:#aaa">59.2%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.74</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td>--</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.75s both">
           <td class="rank">16</td>
-          <td class="name">Drake Batherson</td>
-          <td class="team">OTT</td>
+          <td class="name">Jakob Chychrun</td>
+          <td class="team">WSH</td>
           <td>0.89</td>
-          <td>17.2</td>
+          <td>24.4</td>
           <td>0.89</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="59.1"></div>
               </div>
-              <span class="prob-pct" style="color:var(--muted)">59.1%</span>
+              <span class="prob-pct" style="color:#aaa">59.1%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.62</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td>--</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.8s both">
           <td class="rank">17</td>
-          <td class="name">Vincent Trocheck</td>
-          <td class="team">NYR</td>
+          <td class="name">Dylan Cozens</td>
+          <td class="team">OTT</td>
           <td>0.89</td>
-          <td>21.3</td>
+          <td>16.5</td>
           <td>0.89</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-low" style="width:0%" data-target="58.7"></div>
+                <div class="prob-fill prob-low" style="width:0%" data-target="58.9"></div>
               </div>
-              <span class="prob-pct" style="color:var(--muted)">58.7%</span>
+              <span class="prob-pct" style="color:#aaa">58.9%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.65</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td>--</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.8500000000000001s both">
           <td class="rank">18</td>
-          <td class="name">Adam Fantilli</td>
-          <td class="team">CBJ</td>
+          <td class="name">Connor Bedard</td>
+          <td class="team">CHI</td>
           <td>0.88</td>
-          <td>19.1</td>
+          <td>20.7</td>
           <td>0.88</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-low" style="width:0%" data-target="58.7"></div>
+                <div class="prob-fill prob-low" style="width:0%" data-target="58.4"></div>
               </div>
-              <span class="prob-pct" style="color:var(--muted)">58.7%</span>
+              <span class="prob-pct" style="color:#aaa">58.4%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.62</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td>--</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.9s both">
           <td class="rank">19</td>
-          <td class="name">Jakob Chychrun</td>
+          <td class="name">Aliaksei Protas</td>
           <td class="team">WSH</td>
           <td>0.88</td>
-          <td>24.2</td>
-          <td>0.88</td>
+          <td>18.5</td>
+          <td>0.87</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-low" style="width:0%" data-target="58.5"></div>
+                <div class="prob-fill prob-low" style="width:0%" data-target="58.3"></div>
               </div>
-              <span class="prob-pct" style="color:var(--muted)">58.5%</span>
+              <span class="prob-pct" style="color:#aaa">58.3%</span>
             </div>
           </td>
-          <td><span style="color:var(--muted);font-weight:600">1.65</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td>--</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.9500000000000001s both">
           <td class="rank">20</td>
-          <td class="name">Logan Cooley</td>
-          <td class="team">UTA</td>
-          <td>0.83</td>
-          <td>17.0</td>
-          <td>0.83</td>
+          <td class="name">Drake Batherson</td>
+          <td class="team">OTT</td>
+          <td>0.84</td>
+          <td>17.1</td>
+          <td>0.84</td>
           <td>
             <div class="prob-bar-wrap">
               <div class="prob-bar">
-                <div class="prob-fill prob-low" style="width:0%" data-target="56.2"></div>
+                <div class="prob-fill prob-low" style="width:0%" data-target="56.9"></div>
               </div>
-              <span class="prob-pct" style="color:var(--muted)">56.2%</span>
+              <span class="prob-pct" style="color:#aaa">56.9%</span>
             </div>
           </td>
-          <td><span style="color:var(--gold);font-weight:600">1.91</span></td>
+          <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
           <td>--</td>
         </tr></tbody>
       </table>
@@ -531,208 +884,208 @@
                   <div class="combo-header">
                     <span class="combo-rank">#1</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#00b4d8">51.3%</span>
-                      <span class="combo-cote">cote theo. <strong>1.95</strong></span>
+                      <span class="combo-prob-val" style="color:#1a5cff">51.1%</span>
+                      <span class="combo-cote">cote theo. <strong>1.96</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#00b4d8" data-target="51.3"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#1a5cff" data-target="51.1"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cyan)">72.5%</span></div><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--cyan)">70.8%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#2</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#00b4d8">50.2%</span>
-                      <span class="combo-cote">cote theo. <strong>1.99</strong></span>
+                      <span class="combo-prob-val" style="color:#e63329">49.5%</span>
+                      <span class="combo-cote">cote theo. <strong>2.02</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#00b4d8" data-target="50.2"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="49.5"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cyan)">72.5%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--gold)">69.2%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#3</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#f4a21e">49.2%</span>
-                      <span class="combo-cote">cote theo. <strong>2.03</strong></span>
+                      <span class="combo-prob-val" style="color:#e63329">49.0%</span>
+                      <span class="combo-cote">cote theo. <strong>2.04</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="49.2"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="49.0"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cyan)">72.5%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--gold)">67.9%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#4</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#f4a21e">49.0%</span>
+                      <span class="combo-prob-val" style="color:#e63329">49.0%</span>
                       <span class="combo-cote">cote theo. <strong>2.04</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="49.0"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="49.0"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--cyan)">70.8%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--gold)">69.2%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#5</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#f4a21e">48.0%</span>
-                      <span class="combo-cote">cote theo. <strong>2.08</strong></span>
+                      <span class="combo-prob-val" style="color:#e63329">48.8%</span>
+                      <span class="combo-cote">cote theo. <strong>2.05</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="48.0"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="48.8"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--cyan)">70.8%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--gold)">67.9%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Charlie Coyle</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--red)">67.9%</span></div></div>
                 </div></div><div class="combo-panel" id="combo-3" style="display:none">
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#1</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#f4a21e">35.5%</span>
-                      <span class="combo-cote">cote theo. <strong>2.82</strong></span>
+                      <span class="combo-prob-val" style="color:#e63329">35.2%</span>
+                      <span class="combo-cote">cote theo. <strong>2.84</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="35.5"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="35.2"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cyan)">72.5%</span></div><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--cyan)">70.8%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--gold)">69.2%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#2</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#f4a21e">34.8%</span>
+                      <span class="combo-prob-val" style="color:#e63329">34.8%</span>
                       <span class="combo-cote">cote theo. <strong>2.87</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="34.8"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="34.8"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cyan)">72.5%</span></div><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--cyan)">70.8%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--gold)">67.9%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#3</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#f4a21e">34.1%</span>
-                      <span class="combo-cote">cote theo. <strong>2.93</strong></span>
+                      <span class="combo-prob-val" style="color:#e63329">33.7%</span>
+                      <span class="combo-cote">cote theo. <strong>2.96</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="34.1"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="33.7"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cyan)">72.5%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--gold)">69.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--gold)">67.9%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#4</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#f4a21e">33.2%</span>
-                      <span class="combo-cote">cote theo. <strong>3.01</strong></span>
+                      <span class="combo-prob-val" style="color:#e63329">33.6%</span>
+                      <span class="combo-cote">cote theo. <strong>2.97</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="33.2"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="33.6"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--cyan)">70.8%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--gold)">69.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--gold)">67.9%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Charlie Coyle</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--red)">67.9%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#5</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#f4a21e">33.0%</span>
-                      <span class="combo-cote">cote theo. <strong>3.03</strong></span>
+                      <span class="combo-prob-val" style="color:#e63329">33.4%</span>
+                      <span class="combo-cote">cote theo. <strong>2.99</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#f4a21e" data-target="33.0"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#e63329" data-target="33.4"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cyan)">72.5%</span></div><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--cyan)">70.8%</span></div><div class="combo-player"><span class="combo-pname">Brady Tkachuk</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--gold)">64.3%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div></div>
                 </div></div><div class="combo-panel" id="combo-4" style="display:none">
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#1</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#c1121f">24.1%</span>
-                      <span class="combo-cote">cote theo. <strong>4.15</strong></span>
+                      <span class="combo-prob-val" style="color:#aaa">24.0%</span>
+                      <span class="combo-cote">cote theo. <strong>4.16</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#c1121f" data-target="24.1"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#aaa" data-target="24.0"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cyan)">72.5%</span></div><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--cyan)">70.8%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--gold)">69.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--gold)">67.9%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#2</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#c1121f">22.4%</span>
-                      <span class="combo-cote">cote theo. <strong>4.46</strong></span>
+                      <span class="combo-prob-val" style="color:#aaa">22.9%</span>
+                      <span class="combo-cote">cote theo. <strong>4.36</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#c1121f" data-target="22.4"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#aaa" data-target="22.9"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cyan)">72.5%</span></div><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--cyan)">70.8%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--gold)">67.9%</span></div><div class="combo-player"><span class="combo-pname">Brady Tkachuk</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--gold)">64.3%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div><div class="combo-player"><span class="combo-pname">Charlie Coyle</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--red)">67.9%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#3</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#c1121f">22.4%</span>
-                      <span class="combo-cote">cote theo. <strong>4.47</strong></span>
+                      <span class="combo-prob-val" style="color:#aaa">22.7%</span>
+                      <span class="combo-cote">cote theo. <strong>4.40</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#c1121f" data-target="22.4"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#aaa" data-target="22.7"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--cyan)">70.8%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--gold)">69.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--gold)">67.9%</span></div><div class="combo-player"><span class="combo-pname">Artemi Panarin</span><span class="combo-pteam">LAK</span><span class="combo-pprob" style="color:var(--gold)">67.3%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div><div class="combo-player"><span class="combo-pname">Kirill Marchenko</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--red)">67.3%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#4</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#c1121f">22.3%</span>
-                      <span class="combo-cote">cote theo. <strong>4.49</strong></span>
+                      <span class="combo-prob-val" style="color:#aaa">22.6%</span>
+                      <span class="combo-cote">cote theo. <strong>4.43</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#c1121f" data-target="22.3"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#aaa" data-target="22.6"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--cyan)">72.5%</span></div><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--cyan)">70.8%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--gold)">69.2%</span></div><div class="combo-player"><span class="combo-pname">Mika Zibanejad</span><span class="combo-pteam">NYR</span><span class="combo-pprob" style="color:var(--gold)">62.7%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--red)">68.9%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div><div class="combo-player"><span class="combo-pname">Artemi Panarin</span><span class="combo-pteam">LAK</span><span class="combo-pprob" style="color:var(--red)">66.8%</span></div></div>
                 </div>
                 <div class="combo-card">
                   <div class="combo-header">
                     <span class="combo-rank">#5</span>
                     <div class="combo-probs">
-                      <span class="combo-prob-val" style="color:#c1121f">22.3%</span>
-                      <span class="combo-cote">cote theo. <strong>4.49</strong></span>
+                      <span class="combo-prob-val" style="color:#aaa">22.4%</span>
+                      <span class="combo-cote">cote theo. <strong>4.46</strong></span>
                     </div>
                   </div>
                   <div class="combo-prob-bar">
-                    <div class="combo-prob-fill" style="width:0%;background:#c1121f" data-target="22.3"></div>
+                    <div class="combo-prob-fill" style="width:0%;background:#aaa" data-target="22.4"></div>
                   </div>
-                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--cyan)">70.8%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--gold)">69.2%</span></div><div class="combo-player"><span class="combo-pname">Travis Konecny</span><span class="combo-pteam">PHI</span><span class="combo-pprob" style="color:var(--gold)">67.9%</span></div><div class="combo-player"><span class="combo-pname">Charlie Coyle</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--gold)">66.9%</span></div></div>
+                  <div class="combo-players"><div class="combo-player"><span class="combo-pname">Clayton Keller</span><span class="combo-pteam">UTA</span><span class="combo-pprob" style="color:var(--blue)">71.9%</span></div><div class="combo-player"><span class="combo-pname">Zach Werenski</span><span class="combo-pteam">CBJ</span><span class="combo-pprob" style="color:var(--blue)">71.2%</span></div><div class="combo-player"><span class="combo-pname">Tim Stützle</span><span class="combo-pteam">OTT</span><span class="combo-pprob" style="color:var(--red)">68.2%</span></div><div class="combo-player"><span class="combo-pname">Mika Zibanejad</span><span class="combo-pteam">NYR</span><span class="combo-pprob" style="color:var(--red)">64.4%</span></div></div>
                 </div></div></div>
   </div>
 
   <!-- ONGLET VALUE BETS -->
   <div class="tab-content" id="tab-value">
-    <div class="section-title" style="margin-top:1.5rem">Value Bets &middot; 09/03/2026</div><p style="font-size:0.68rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6">Value = (prob modele &times; cote bookmaker) &minus; 1 &gt; 5.0%. Betclic en priorite, fallback EU.</p><div class="table-wrap"><table><thead><tr><th>#</th><th>Joueur</th><th>Equipe</th><th>P(Over 0.5)</th><th>Cote</th><th>Value</th><th>Adj. Gardien</th><th>Source</th></tr></thead><tbody><tr style="animation:fadeIn 0.4s ease 0.0s both"><td class="rank">1</td><td class="name">Charlie Coyle</td><td class="team">CBJ</td><td>66.9%</td><td style="color:var(--gold);font-weight:600">1.8</td><td style="color:var(--gold);font-weight:700">+20.5%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">DraftKings</td></tr><tr style="animation:fadeIn 0.4s ease 0.06s both"><td class="rank">2</td><td class="name">Logan Cooley</td><td class="team">UTA</td><td>56.2%</td><td style="color:var(--gold);font-weight:600">1.91</td><td style="color:var(--cyan);font-weight:700">+7.4%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">DraftKings</td></tr></tbody></table></div>
+    <div class="section-title" style="margin-top:1.5rem">Value Bets &middot; 09/03/2026</div><div class="no-games" style="margin-top:1rem">Aucun value bet &ge; 5.0% detecte aujourd hui.</div>
   </div>
 
   <!-- ONGLET HISTORIQUE -->
   <div class="tab-content" id="tab-history">
-    <div class="section-title" style="margin-top:1.5rem">Historique des picks</div>
-    <div class="hist-tabs"><button class="hist-tab" data-panel="day-2026-03-08" onclick="showPanel(this)">08/03 <span class="tab-rate" style="color:#00b4d8">63%</span></button></div>
+    <div class="section-title">Historique des picks</div>
+    <div class="hist-tabs"><button class="hist-tab" data-panel="day-2026-03-08" onclick="showPanel(this)">08/03 <span class="tab-rate" style="color:var(--blue)">63%</span></button></div>
     <div id="hist-panels">
         <div class="hist-panel" id="day-2026-03-08" style="display:none">
           <div class="hist-panel-header">
@@ -914,11 +1267,11 @@
 </main>
 
 <footer>
-  <div>NHL STATS BOT · v8.0 · Python + NHL API officielle · Genere le 09/03/2026 a 19:59</div>
+  <div>NHL STATS BOT &middot; v8.0 &middot; Python + NHL API officielle &middot; Genere le 09/03/2026 a 20:29</div>
   <div style="margin-top:0.4rem">
     <a href="https://github.com/Thiboulard/NHL-Stats" target="_blank">GitHub</a>
-    · <a href="https://api-web.nhle.com" target="_blank">NHL API</a>
-    · Modele : Poisson
+    &middot; <a href="https://api-web.nhle.com" target="_blank">NHL API</a>
+    &middot; Modele : Poisson
   </div>
 </footer>
 
