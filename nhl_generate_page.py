@@ -690,9 +690,9 @@ def fetch_odds():
         print("     Odds API erreur : {}".format(e))
         return {}
 
-# DEBUG — à retirer après vérification
-print("     Exemple cotes:", list(odds_map.items())[:3])
-print("     Exemple joueurs top:", [p["name"].lower() for p in top[:3]])
+    # DEBUG — à retirer après vérification
+    print("     Exemple cotes:", list(odds_map.items())[:3])
+    print("     Exemple joueurs top:", [p["name"].lower() for p in top[:3]])
 
 
 def build_html(games, top_players, history, generated_at, odds_map=None, value_picks=None):
