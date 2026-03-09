@@ -674,6 +674,8 @@ def fetch_odds():
             else:
                 final[name] = (eu_map[name], "EU")
         print("     {} cotes recuperees".format(len(final)))
+        for name, (cote, src) in list(final.items())[:15]:
+            print("  ODDS: {} -> {} ({})".format(name, cote, src))
         return final
     except Exception as e:
         print("     [Odds API] erreur : {}".format(e))
