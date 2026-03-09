@@ -7,23 +7,24 @@
   <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Barlow+Condensed:wght@400;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
   <style>
     :root{
-      --ink:#0a0a0a;
-      --paper:#f5f0e8;
-      --red:#e63329;
+      --bg:#0d0f1a;
+      --surface:#151929;
+      --surface2:#1c2238;
+      --red:#ff3a2d;
       --yellow:#ffd500;
-      --blue:#1a5cff;
-      --cyan:#00d4ff;
+      --blue:#2563ff;
+      --cyan:#00e5ff;
       --magenta:#ff2d9b;
-      --white:#ffffff;
-      --muted:#555;
-      --border:3px solid var(--ink);
+      --text:#e8eaf0;
+      --muted:#6b7a99;
+      --ink:#0a0c14;
     }
     *{margin:0;padding:0;box-sizing:border-box;}
 
-    /* HALFTONE BACKGROUND */
+    /* HALFTONE DOT BG */
     body{
-      background-color:var(--ink);
-      color:var(--ink);
+      background-color:var(--bg);
+      color:var(--text);
       font-family:'Barlow Condensed',sans-serif;
       overflow-x:hidden;
       position:relative;
@@ -31,15 +32,13 @@
     body::before{
       content:'';
       position:fixed;inset:0;pointer-events:none;z-index:0;
-      background-image:radial-gradient(circle,rgba(255,213,0,0.08) 1px,transparent 1px);
-      background-size:18px 18px;
+      background-image:radial-gradient(circle,rgba(255,213,0,0.055) 1px,transparent 1px);
+      background-size:20px 20px;
     }
-
-    /* SCAN LINE OVERLAY */
     body::after{
       content:'';
       position:fixed;inset:0;pointer-events:none;z-index:1;
-      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px);
+      background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);
     }
 
     /* ===== HEADER ===== */
@@ -47,7 +46,6 @@
       position:relative;z-index:10;
       background:var(--yellow);
       border-bottom:5px solid var(--ink);
-      padding:0;
       overflow:hidden;
     }
     .header-top{
@@ -56,26 +54,16 @@
       padding:0.4rem 2rem;
       display:flex;justify-content:space-between;align-items:center;
     }
-    .header-top-label{
-      font-family:'Bangers',cursive;
-      font-size:0.9rem;
-      letter-spacing:0.15em;
-      color:var(--yellow);
-    }
+    .header-top-label{font-family:'Bangers',cursive;font-size:0.9rem;letter-spacing:0.15em;color:var(--yellow);}
     .header-main{
-      padding:1.5rem 2rem 1rem;
+      padding:1.5rem 2rem 1.2rem;
       text-align:center;
       position:relative;
     }
-    /* diagonal stripe accent */
     .header-main::before{
       content:'';
-      position:absolute;top:0;left:0;right:0;bottom:0;
-      background:repeating-linear-gradient(
-        -45deg,
-        transparent,transparent 10px,
-        rgba(0,0,0,0.04) 10px,rgba(0,0,0,0.04) 20px
-      );
+      position:absolute;inset:0;
+      background:repeating-linear-gradient(-45deg,transparent,transparent 10px,rgba(0,0,0,0.035) 10px,rgba(0,0,0,0.035) 20px);
       pointer-events:none;
     }
     h1{
@@ -84,370 +72,262 @@
       letter-spacing:0.06em;
       color:var(--ink);
       line-height:0.9;
-      text-shadow:6px 6px 0 var(--red),-2px -2px 0 rgba(0,0,255,0.3);
       position:relative;
+      display:inline-block;
     }
-    h1 .accent{color:var(--red);text-shadow:4px 4px 0 var(--ink);}
-    h1 .accent2{color:var(--blue);text-shadow:4px 4px 0 var(--ink);}
-    .tagline{
-      font-family:'Bangers',cursive;
-      font-size:1.1rem;
-      letter-spacing:0.2em;
-      color:var(--ink);
-      margin-top:0.3rem;
-      opacity:0.7;
+    h1 .accent{color:var(--red);}
+    h1 .accent2{color:var(--blue);}
+
+    /* GLITCH on h1 */
+    @keyframes glitch-main{
+      0%,90%,100%{
+        text-shadow:5px 5px 0 var(--red),-3px -3px 0 rgba(37,99,255,0.5);
+        transform:skewX(0deg);
+      }
+      91%{text-shadow:-6px 3px 0 var(--cyan),6px -3px 0 var(--red);transform:skewX(-3deg) translateX(3px);}
+      92%{text-shadow:6px -3px 0 var(--magenta),-4px 3px 0 var(--blue);transform:skewX(3deg) translateX(-3px);}
+      93%{text-shadow:0 0 0 transparent;transform:skewX(0);}
+      94%{text-shadow:-5px 0 0 var(--cyan),5px 0 0 var(--red);transform:translateX(2px);}
+      95%{text-shadow:5px 5px 0 var(--red),-3px -3px 0 rgba(37,99,255,0.5);transform:skewX(0);}
     }
+    h1{animation:glitch-main 7s ease-in-out infinite;}
+
+    .tagline{font-family:'Bangers',cursive;font-size:1.1rem;letter-spacing:0.2em;color:var(--ink);margin-top:0.3rem;opacity:0.7;}
     .meta-pill{
       display:inline-block;
-      background:var(--ink);
-      color:var(--yellow);
-      font-family:'Share Tech Mono',monospace;
-      font-size:0.65rem;
-      letter-spacing:0.12em;
-      padding:0.25rem 0.75rem;
-      margin-top:0.5rem;
+      background:var(--ink);color:var(--text);
+      font-family:'Share Tech Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;
+      padding:0.25rem 0.75rem;margin-top:0.5rem;
       clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
     }
     .meta-pill strong{color:var(--cyan);}
 
-    /* GLOBAL RATE — comic panel style */
+    /* GLOBAL RATE */
     .global-rate{
-      margin:1rem auto 0;
-      max-width:380px;
-      background:var(--white);
+      margin:1rem auto 0;max-width:380px;
+      background:var(--surface);
       border:4px solid var(--ink);
       box-shadow:6px 6px 0 var(--ink);
-      padding:1rem 1.5rem;
-      text-align:center;
-      position:relative;
+      padding:1rem 1.5rem;text-align:center;position:relative;
     }
     .global-rate::before{
       content:'STATS';
       position:absolute;top:-14px;left:16px;
-      background:var(--blue);
-      color:var(--white);
-      font-family:'Bangers',cursive;
-      font-size:0.75rem;
-      letter-spacing:0.15em;
-      padding:0 0.5rem;
-      border:3px solid var(--ink);
+      background:var(--blue);color:var(--yellow);
+      font-family:'Bangers',cursive;font-size:0.75rem;letter-spacing:0.15em;
+      padding:0 0.5rem;border:3px solid var(--ink);
     }
     .global-rate-label{font-size:0.55rem;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase;margin-bottom:0.2rem;font-weight:700;}
-    .global-rate-value{font-family:'Bangers',cursive;font-size:3.5rem;letter-spacing:0.05em;line-height:1;color:var(--ink);}
+    .global-rate-value{font-family:'Bangers',cursive;font-size:3.5rem;letter-spacing:0.05em;line-height:1;}
     .global-rate-sub{font-size:0.65rem;color:var(--muted);margin-top:0.2rem;font-weight:600;}
 
     /* ===== TICKER ===== */
     .ticker{
-      overflow:hidden;
-      background:var(--ink);
-      border-top:3px solid var(--yellow);
-      border-bottom:3px solid var(--yellow);
-      padding:0.45rem 0;
-      position:relative;z-index:10;
+      overflow:hidden;background:var(--ink);
+      border-top:3px solid var(--yellow);border-bottom:3px solid var(--yellow);
+      padding:0.45rem 0;position:relative;z-index:10;
     }
     .ticker-inner{display:flex;gap:0;animation:ticker 32s linear infinite;white-space:nowrap;}
     @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
     .ticker-item{
-      font-family:'Bangers',cursive;
-      font-size:0.85rem;
-      letter-spacing:0.12em;
-      color:var(--yellow);
-      padding:0 2rem;
-      border-right:2px solid rgba(255,213,0,0.3);
+      font-family:'Bangers',cursive;font-size:0.85rem;letter-spacing:0.12em;
+      color:var(--yellow);padding:0 2rem;border-right:2px solid rgba(255,213,0,0.25);
     }
     .ticker-item strong{color:var(--cyan);}
-    .ticker-sep{color:var(--red);padding:0 0.5rem;}
 
-    /* ===== NAVIGATION TABS ===== */
+    /* ===== TABS ===== */
     .tabs{
-      display:flex;
-      background:var(--ink);
+      display:flex;background:var(--ink);
       position:sticky;top:0;z-index:50;
-      border-bottom:4px solid var(--yellow);
-      overflow-x:auto;
+      border-bottom:4px solid var(--yellow);overflow-x:auto;
     }
     .tab-btn{
-      background:transparent;
-      border:none;
-      border-right:2px solid rgba(255,213,0,0.2);
+      background:transparent;border:none;
+      border-right:2px solid rgba(255,213,0,0.15);
       padding:0.9rem 1.8rem;
-      font-family:'Bangers',cursive;
-      font-size:1rem;
-      letter-spacing:0.15em;
-      color:rgba(255,213,0,0.5);
-      cursor:pointer;
-      transition:all 0.15s;
-      white-space:nowrap;
-      position:relative;
+      font-family:'Bangers',cursive;font-size:1rem;letter-spacing:0.15em;
+      color:rgba(255,213,0,0.45);cursor:pointer;transition:all 0.15s;white-space:nowrap;position:relative;
     }
-    .tab-btn:hover{color:var(--yellow);background:rgba(255,213,0,0.08);}
-    .tab-btn.active{
-      color:var(--ink);
-      background:var(--yellow);
-    }
+    .tab-btn:hover{color:var(--yellow);background:rgba(255,213,0,0.06);}
+    .tab-btn.active{color:var(--ink);background:var(--yellow);}
     .tab-btn.active::after{
-      content:'';
-      position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);
-      border:6px solid transparent;
-      border-top-color:var(--yellow);
+      content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);
+      border:6px solid transparent;border-top-color:var(--yellow);
     }
     .tab-content{display:none;}
     .tab-content.active{display:block;}
 
     /* ===== MAIN ===== */
-    main{
-      position:relative;z-index:10;
-      max-width:1140px;
-      margin:0 auto;
-      padding:2rem 1.5rem 4rem;
-    }
+    main{position:relative;z-index:10;max-width:1140px;margin:0 auto;padding:2rem 1.5rem 4rem;}
 
-    /* Section title — speech bubble style */
     .section-title{
-      font-family:'Bangers',cursive;
-      font-size:1.6rem;
-      letter-spacing:0.1em;
-      color:var(--yellow);
-      margin-bottom:1.2rem;
-      margin-top:1.5rem;
-      display:inline-flex;
-      align-items:center;
-      gap:0.75rem;
-      background:var(--ink);
-      padding:0.3rem 1.2rem 0.3rem 0.8rem;
+      font-family:'Bangers',cursive;font-size:1.6rem;letter-spacing:0.1em;
+      color:var(--yellow);margin-bottom:1.2rem;margin-top:1.5rem;
+      display:inline-flex;align-items:center;gap:0.75rem;
+      background:var(--ink);padding:0.3rem 1.2rem 0.3rem 0.8rem;
       clip-path:polygon(0 0,calc(100% - 12px) 0,100% 50%,calc(100% - 12px) 100%,0 100%);
     }
 
-    /* Matchups bar */
     .matchups-bar{
-      background:var(--white);
-      border:3px solid var(--ink);
+      background:var(--surface);border:3px solid rgba(255,213,0,0.3);
       box-shadow:4px 4px 0 var(--ink);
-      padding:0.6rem 1.1rem;
-      margin-bottom:1.5rem;
-      font-family:'Share Tech Mono',monospace;
-      font-size:0.72rem;
-      letter-spacing:0.06em;
+      padding:0.6rem 1.1rem;margin-bottom:1.5rem;
+      font-family:'Share Tech Mono',monospace;font-size:0.72rem;letter-spacing:0.06em;
+      color:var(--text);
     }
-    .matchups-bar span{color:var(--red);font-weight:700;margin-right:0.5rem;}
+    .matchups-bar span{color:var(--yellow);font-weight:700;margin-right:0.5rem;}
 
     .no-games{
-      background:var(--red);
-      border:3px solid var(--ink);
-      box-shadow:4px 4px 0 var(--ink);
-      padding:1rem;
-      margin-bottom:1.5rem;
-      text-align:center;
-      color:var(--white);
-      font-family:'Bangers',cursive;
-      font-size:1.1rem;
-      letter-spacing:0.1em;
+      background:rgba(255,58,45,0.2);border:3px solid var(--red);
+      box-shadow:4px 4px 0 var(--ink);padding:1rem;margin-bottom:1.5rem;
+      text-align:center;color:var(--red);font-family:'Bangers',cursive;
+      font-size:1.1rem;letter-spacing:0.1em;
     }
 
-    /* ===== TABLE — comic panel ===== */
+    /* ===== TABLE ===== */
     .table-wrap{
       overflow-x:auto;
-      border:4px solid var(--ink);
-      box-shadow:7px 7px 0 var(--yellow);
+      border:4px solid rgba(255,213,0,0.4);
+      box-shadow:7px 7px 0 rgba(255,213,0,0.2);
       margin-bottom:2.5rem;
-      background:var(--white);
+      background:var(--surface);
     }
     table{width:100%;border-collapse:collapse;font-size:0.78rem;}
     thead tr{background:var(--ink);}
     th{
-      padding:0.7rem 0.9rem;
-      text-align:left;
-      font-family:'Bangers',cursive;
-      letter-spacing:0.12em;
-      color:var(--yellow);
-      font-size:0.8rem;
-      white-space:nowrap;
-      border-right:1px solid rgba(255,213,0,0.2);
+      padding:0.7rem 0.9rem;text-align:left;
+      font-family:'Bangers',cursive;letter-spacing:0.12em;
+      color:var(--yellow);font-size:0.8rem;white-space:nowrap;
+      border-right:1px solid rgba(255,213,0,0.12);
     }
-    tbody tr{border-bottom:2px solid var(--ink);transition:background 0.1s;}
-    tbody tr:nth-child(even){background:#f0ebe0;}
-    tbody tr:hover{background:var(--yellow);}
-    td{padding:0.6rem 0.9rem;color:var(--ink);white-space:nowrap;font-weight:600;border-right:1px solid rgba(0,0,0,0.08);}
-    td.rank{
-      font-family:'Bangers',cursive;
-      font-size:1.4rem;
-      color:var(--red);
-      width:40px;
-      text-align:center;
-    }
-    td.name{color:var(--ink);font-weight:900;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.03em;}
-    td.team{
-      color:var(--blue);
-      font-family:'Bangers',cursive;
-      font-size:0.9rem;
-      letter-spacing:0.1em;
-    }
+    tbody tr{border-bottom:1px solid rgba(255,213,0,0.08);transition:background 0.1s;}
+    tbody tr:nth-child(even){background:var(--surface2);}
+    tbody tr:hover{background:rgba(255,213,0,0.08);}
+    td{padding:0.6rem 0.9rem;color:var(--text);white-space:nowrap;font-weight:600;border-right:1px solid rgba(255,255,255,0.04);}
+    td.rank{font-family:'Bangers',cursive;font-size:1.4rem;color:var(--red);width:40px;text-align:center;}
+    td.name{color:#fff;font-weight:900;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.03em;}
+    td.team{color:var(--cyan);font-family:'Bangers',cursive;font-size:0.9rem;letter-spacing:0.1em;}
 
     /* PROB BAR */
     .prob-bar-wrap{display:flex;align-items:center;gap:0.5rem;}
-    .prob-bar{
-      flex:1;height:8px;
-      background:rgba(0,0,0,0.12);
-      border:2px solid var(--ink);
-      overflow:hidden;
-      min-width:55px;
-    }
+    .prob-bar{flex:1;height:8px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,213,0,0.2);overflow:hidden;min-width:55px;}
     .prob-fill{height:100%;transition:width 0.8s cubic-bezier(0.34,1.56,0.64,1);}
     .prob-high{background:var(--blue);}
     .prob-mid{background:var(--red);}
-    .prob-low{background:#aaa;}
-    .prob-pct{
-      font-family:'Bangers',cursive;
-      font-size:0.9rem;
-      min-width:38px;
-      text-align:right;
+    .prob-low{background:#555;}
+    .prob-pct{font-family:'Bangers',cursive;font-size:0.9rem;min-width:38px;text-align:right;}
+
+    /* GLITCH on high prob % */
+    @keyframes glitch-num{
+      0%,88%,100%{text-shadow:none;transform:none;}
+      89%{text-shadow:-3px 0 var(--cyan),3px 0 var(--red);transform:skewX(-4deg);}
+      90%{text-shadow:3px 0 var(--magenta),-3px 0 var(--blue);transform:skewX(4deg);}
+      91%{text-shadow:none;transform:none;}
     }
+    .prob-pct.glitch-on{animation:glitch-num 4s ease-in-out infinite;color:var(--cyan);}
 
     /* SIGNAL TAGS */
     .over-tag{
-      display:inline-block;
-      padding:0.1rem 0.45rem;
-      font-family:'Bangers',cursive;
-      font-size:0.75rem;
-      letter-spacing:0.08em;
-      border:2px solid var(--ink);
+      display:inline-block;padding:0.1rem 0.45rem;
+      font-family:'Bangers',cursive;font-size:0.75rem;letter-spacing:0.08em;
+      border:2px solid rgba(255,255,255,0.2);
     }
-    .over-strong{background:var(--blue);color:var(--white);}
-    .over-mid{background:var(--red);color:var(--white);}
+    .over-strong{background:var(--blue);color:#fff;border-color:var(--blue);}
+    .over-mid{background:var(--red);color:#fff;border-color:var(--red);}
 
-    /* ===== HISTORY TABS ===== */
+    /* HISTORY */
     .hist-tabs{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.25rem;}
     .hist-tab{
-      background:var(--ink);
-      border:2px solid rgba(255,213,0,0.3);
-      padding:0.35rem 0.8rem;
-      font-family:'Bangers',cursive;
-      font-size:0.85rem;
-      letter-spacing:0.1em;
-      color:rgba(255,213,0,0.6);
-      cursor:pointer;
-      transition:all 0.15s;
+      background:var(--surface);border:2px solid rgba(255,213,0,0.25);
+      padding:0.35rem 0.8rem;font-family:'Bangers',cursive;font-size:0.85rem;
+      letter-spacing:0.1em;color:rgba(255,213,0,0.55);cursor:pointer;transition:all 0.15s;
       display:inline-flex;align-items:center;gap:0.4rem;
     }
-    .hist-tab:hover,.hist-tab.active{
-      background:var(--yellow);
-      color:var(--ink);
-      border-color:var(--yellow);
-    }
+    .hist-tab:hover,.hist-tab.active{background:var(--yellow);color:var(--ink);border-color:var(--yellow);}
     .tab-rate{font-size:0.75rem;font-weight:700;}
     .hist-panel-header{
       display:flex;justify-content:space-between;align-items:center;
-      margin-bottom:0.75rem;
-      font-family:'Bangers',cursive;
-      font-size:1rem;
-      letter-spacing:0.08em;
-      color:var(--yellow);
-      padding:0.4rem 0.75rem;
-      background:var(--ink);
-      border:3px solid var(--yellow);
+      margin-bottom:0.75rem;font-family:'Bangers',cursive;font-size:1rem;
+      letter-spacing:0.08em;color:var(--yellow);
+      padding:0.4rem 0.75rem;background:var(--ink);border:3px solid rgba(255,213,0,0.4);
     }
     .panel-rate{color:var(--cyan);}
     .res-cell{width:30px;text-align:center;}
-    .res-win{
-      display:inline-block;
-      background:var(--blue);color:var(--white);
-      font-family:'Bangers',cursive;font-size:0.9rem;
-      padding:0 5px;border:2px solid var(--ink);
-    }
-    .res-loss{
-      display:inline-block;
-      background:var(--red);color:var(--white);
-      font-family:'Bangers',cursive;font-size:0.9rem;
-      padding:0 5px;border:2px solid var(--ink);
-    }
-    .res-nogame{color:#aaa;font-family:'Bangers',cursive;}
+    .res-win{display:inline-block;background:var(--blue);color:#fff;font-family:'Bangers',cursive;font-size:0.9rem;padding:0 5px;border:2px solid rgba(255,255,255,0.2);}
+    .res-loss{display:inline-block;background:var(--red);color:#fff;font-family:'Bangers',cursive;font-size:0.9rem;padding:0 5px;border:2px solid rgba(255,255,255,0.2);}
+    .res-nogame{color:var(--muted);font-family:'Bangers',cursive;}
     .res-pending{color:var(--yellow);font-family:'Bangers',cursive;}
 
-    /* ===== COMBO CARDS ===== */
-    .combo-intro{font-size:0.75rem;color:var(--yellow);margin-bottom:1.25rem;line-height:1.6;font-weight:600;letter-spacing:0.05em;}
+    /* COMBOS */
+    .combo-intro{font-size:0.75rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6;font-weight:600;letter-spacing:0.05em;}
     .combo-tabs{display:flex;gap:0;border-bottom:4px solid var(--yellow);margin-bottom:1.5rem;}
     .combo-tab{
-      background:transparent;border:none;
-      border-bottom:3px solid transparent;
-      padding:0.6rem 1.4rem;
-      font-family:'Bangers',cursive;
-      font-size:1rem;letter-spacing:0.12em;
-      color:rgba(255,213,0,0.5);cursor:pointer;transition:all 0.15s;
+      background:transparent;border:none;border-bottom:3px solid transparent;
+      padding:0.6rem 1.4rem;font-family:'Bangers',cursive;font-size:1rem;
+      letter-spacing:0.12em;color:rgba(255,213,0,0.45);cursor:pointer;transition:all 0.15s;
     }
     .combo-tab:hover{color:var(--yellow);}
     .combo-tab.active{color:var(--ink);background:var(--yellow);}
     .combo-card{
-      background:var(--white);
-      border:4px solid var(--ink);
-      box-shadow:5px 5px 0 var(--ink);
-      padding:1.1rem 1.25rem;
-      margin-bottom:1rem;
-      transition:transform 0.15s,box-shadow 0.15s;
-      position:relative;
+      background:var(--surface);border:3px solid rgba(255,213,0,0.25);
+      box-shadow:5px 5px 0 var(--ink);padding:1.1rem 1.25rem;margin-bottom:1rem;
+      transition:transform 0.15s,box-shadow 0.15s,border-color 0.15s;
     }
-    .combo-card:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink);}
+    .combo-card:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--ink);border-color:var(--yellow);}
     .combo-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.5rem;}
-    .combo-rank{
-      font-family:'Bangers',cursive;font-size:2rem;
-      color:var(--red);line-height:1;
-    }
+    .combo-rank{font-family:'Bangers',cursive;font-size:2rem;color:var(--red);line-height:1;}
     .combo-probs{display:flex;align-items:baseline;gap:1rem;}
     .combo-prob-val{font-family:'Bangers',cursive;font-size:2.2rem;letter-spacing:0.03em;line-height:1;}
     .combo-cote{font-size:0.7rem;color:var(--muted);font-weight:700;}
-    .combo-cote strong{color:var(--red);}
-    .combo-prob-bar{
-      height:6px;
-      background:rgba(0,0,0,0.1);
-      border:2px solid var(--ink);
-      overflow:hidden;margin-bottom:0.85rem;
-    }
+    .combo-cote strong{color:var(--yellow);}
+    .combo-prob-bar{height:6px;background:rgba(255,255,255,0.06);border:2px solid rgba(255,213,0,0.15);overflow:hidden;margin-bottom:0.85rem;}
     .combo-prob-fill{height:100%;transition:width 0.9s cubic-bezier(0.34,1.56,0.64,1);}
     .combo-players{display:flex;flex-wrap:wrap;gap:0.5rem;}
     .combo-player{
-      background:var(--ink);
-      border:2px solid var(--ink);
-      padding:0.3rem 0.65rem;
-      display:flex;align-items:center;gap:0.5rem;
+      background:var(--ink);border:2px solid rgba(255,213,0,0.2);
+      padding:0.3rem 0.65rem;display:flex;align-items:center;gap:0.5rem;
       clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%);
     }
     .combo-pname{font-size:0.75rem;color:var(--yellow);font-weight:900;letter-spacing:0.04em;text-transform:uppercase;}
-    .combo-pteam{font-size:0.62rem;color:rgba(255,213,0,0.5);letter-spacing:0.08em;}
+    .combo-pteam{font-size:0.62rem;color:var(--muted);letter-spacing:0.08em;}
     .combo-pprob{font-family:'Bangers',cursive;font-size:0.85rem;}
 
-    /* DIVIDER */
+    /* GLITCH on section titles — subtle */
+    @keyframes glitch-title{
+      0%,94%,100%{clip-path:none;transform:none;}
+      95%{clip-path:inset(20% 0 60% 0);transform:translateX(-4px);}
+      96%{clip-path:inset(60% 0 10% 0);transform:translateX(4px);}
+      97%{clip-path:none;transform:none;}
+    }
+    .section-title{animation:glitch-title 8s ease-in-out infinite;}
+
+    /* GLITCH on value badge */
+    @keyframes glitch-badge{
+      0%,85%,100%{text-shadow:none;transform:none;filter:none;}
+      86%{text-shadow:-2px 0 var(--cyan);transform:skewX(-2deg);}
+      87%{text-shadow:2px 0 var(--red);transform:skewX(2deg);}
+      88%{text-shadow:none;transform:none;}
+    }
+    .over-strong{animation:glitch-badge 5s ease-in-out infinite;}
+
     .glow-line{
       height:4px;
       background:repeating-linear-gradient(90deg,var(--yellow) 0,var(--yellow) 12px,var(--ink) 12px,var(--ink) 16px);
-      margin:2.5rem 0;
-      opacity:0.6;
+      margin:2.5rem 0;opacity:0.5;
     }
 
-    /* ===== FOOTER ===== */
     footer{
-      position:relative;z-index:10;
-      text-align:center;
-      padding:1.5rem;
-      border-top:4px solid var(--yellow);
-      background:var(--ink);
-      font-family:'Bangers',cursive;
-      font-size:0.85rem;
-      letter-spacing:0.12em;
-      color:rgba(255,213,0,0.5);
+      position:relative;z-index:10;text-align:center;padding:1.5rem;
+      border-top:4px solid var(--yellow);background:var(--ink);
+      font-family:'Bangers',cursive;font-size:0.85rem;letter-spacing:0.12em;color:var(--muted);
     }
     footer a{color:var(--cyan);text-decoration:none;margin:0 0.5rem;}
     footer a:hover{color:var(--yellow);}
 
-    /* ===== ANIMATIONS ===== */
     @keyframes fadeIn{
       from{opacity:0;transform:translateY(10px) skewX(-2deg);}
-      to{opacity:1;transform:translateY(0) skewX(0deg);}
+      to{opacity:1;transform:translateY(0) skewX(0);}
     }
-    @keyframes glitch{
-      0%,100%{text-shadow:6px 6px 0 var(--red),-2px -2px 0 rgba(0,0,255,0.3);}
-      25%{text-shadow:-4px 4px 0 var(--cyan),4px -2px 0 var(--red);}
-      75%{text-shadow:4px -4px 0 var(--magenta),-2px 2px 0 var(--blue);}
-    }
-    h1{animation:glitch 6s ease-in-out infinite;}
   </style>
 </head>
 <body>
@@ -460,7 +340,7 @@
   <div class="header-main">
     <h1>NHL <span class="accent">STATS</span> <span class="accent2">BOT</span></h1>
     <p class="tagline">Analyse automatique · Probabilites Poisson · Top 20 joueurs du jour</p>
-    <div class="meta-pill">Mis a jour le <strong>09/03/2026 a 20:29</strong> &nbsp;|&nbsp; Matchs : <strong>5</strong></div>
+    <div class="meta-pill">Mis a jour le <strong>09/03/2026 a 20:42</strong> &nbsp;|&nbsp; Matchs : <strong>5</strong></div>
     
     <div class="global-rate">
       <div class="global-rate-label">TAUX DE REUSSITE GLOBAL</div>
@@ -521,7 +401,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-high" style="width:0%" data-target="71.9"></div>
               </div>
-              <span class="prob-pct" style="color:var(--blue)">71.9%</span>
+              <span class="prob-pct glitch-on" style="color:var(--blue)">71.9%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -539,7 +419,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-high" style="width:0%" data-target="71.2"></div>
               </div>
-              <span class="prob-pct" style="color:var(--blue)">71.2%</span>
+              <span class="prob-pct glitch-on" style="color:var(--blue)">71.2%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -557,7 +437,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="68.9"></div>
               </div>
-              <span class="prob-pct" style="color:var(--red)">68.9%</span>
+              <span class="prob-pct " style="color:var(--red)">68.9%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -575,7 +455,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="68.2"></div>
               </div>
-              <span class="prob-pct" style="color:var(--red)">68.2%</span>
+              <span class="prob-pct " style="color:var(--red)">68.2%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -593,7 +473,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="67.9"></div>
               </div>
-              <span class="prob-pct" style="color:var(--red)">67.9%</span>
+              <span class="prob-pct " style="color:var(--red)">67.9%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -611,7 +491,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="67.3"></div>
               </div>
-              <span class="prob-pct" style="color:var(--red)">67.3%</span>
+              <span class="prob-pct " style="color:var(--red)">67.3%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -629,7 +509,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="66.8"></div>
               </div>
-              <span class="prob-pct" style="color:var(--red)">66.8%</span>
+              <span class="prob-pct " style="color:var(--red)">66.8%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -647,7 +527,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="64.5"></div>
               </div>
-              <span class="prob-pct" style="color:var(--red)">64.5%</span>
+              <span class="prob-pct " style="color:var(--red)">64.5%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -665,7 +545,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="64.4"></div>
               </div>
-              <span class="prob-pct" style="color:var(--red)">64.4%</span>
+              <span class="prob-pct " style="color:var(--red)">64.4%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -683,7 +563,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="63.5"></div>
               </div>
-              <span class="prob-pct" style="color:var(--red)">63.5%</span>
+              <span class="prob-pct " style="color:var(--red)">63.5%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -701,7 +581,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="62.7"></div>
               </div>
-              <span class="prob-pct" style="color:var(--red)">62.7%</span>
+              <span class="prob-pct " style="color:var(--red)">62.7%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -719,7 +599,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="61.6"></div>
               </div>
-              <span class="prob-pct" style="color:var(--red)">61.6%</span>
+              <span class="prob-pct " style="color:var(--red)">61.6%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -737,7 +617,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="60.3"></div>
               </div>
-              <span class="prob-pct" style="color:var(--red)">60.3%</span>
+              <span class="prob-pct " style="color:var(--red)">60.3%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -755,7 +635,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-mid" style="width:0%" data-target="60.2"></div>
               </div>
-              <span class="prob-pct" style="color:var(--red)">60.2%</span>
+              <span class="prob-pct " style="color:var(--red)">60.2%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -773,7 +653,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="59.2"></div>
               </div>
-              <span class="prob-pct" style="color:#aaa">59.2%</span>
+              <span class="prob-pct " style="color:#aaa">59.2%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -791,7 +671,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="59.1"></div>
               </div>
-              <span class="prob-pct" style="color:#aaa">59.1%</span>
+              <span class="prob-pct " style="color:#aaa">59.1%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -809,7 +689,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="58.9"></div>
               </div>
-              <span class="prob-pct" style="color:#aaa">58.9%</span>
+              <span class="prob-pct " style="color:#aaa">58.9%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -827,7 +707,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="58.4"></div>
               </div>
-              <span class="prob-pct" style="color:#aaa">58.4%</span>
+              <span class="prob-pct " style="color:#aaa">58.4%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -845,7 +725,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="58.3"></div>
               </div>
-              <span class="prob-pct" style="color:#aaa">58.3%</span>
+              <span class="prob-pct " style="color:#aaa">58.3%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -863,7 +743,7 @@
               <div class="prob-bar">
                 <div class="prob-fill prob-low" style="width:0%" data-target="56.9"></div>
               </div>
-              <span class="prob-pct" style="color:#aaa">56.9%</span>
+              <span class="prob-pct " style="color:#aaa">56.9%</span>
             </div>
           </td>
           <td><span style="color:var(--muted);font-weight:600">1.4</span></td>
@@ -1267,7 +1147,7 @@
 </main>
 
 <footer>
-  <div>NHL STATS BOT &middot; v8.0 &middot; Python + NHL API officielle &middot; Genere le 09/03/2026 a 20:29</div>
+  <div>NHL STATS BOT &middot; v8.0 &middot; Python + NHL API officielle &middot; Genere le 09/03/2026 a 20:42</div>
   <div style="margin-top:0.4rem">
     <a href="https://github.com/Thiboulard/NHL-Stats" target="_blank">GitHub</a>
     &middot; <a href="https://api-web.nhle.com" target="_blank">NHL API</a>
@@ -1289,14 +1169,13 @@
     var panel = document.getElementById(btn.dataset.panel);
     if (panel) panel.style.display = 'block';
   }
-  var comboColors = {'combo-2':'var(--cyan)','combo-3':'var(--gold)','combo-4':'#c77dff'};
+  var comboColors = {'combo-2':'var(--blue)','combo-3':'var(--red)','combo-4':'var(--magenta)'};
   function showCombo(btn) {
-    document.querySelectorAll('.combo-tab').forEach(b => { b.classList.remove('active'); b.style.borderBottomColor='transparent'; b.style.color='var(--muted)'; });
+    document.querySelectorAll('.combo-tab').forEach(b => { b.classList.remove('active'); b.style.background='transparent'; b.style.color='rgba(255,213,0,0.45)'; });
     document.querySelectorAll('.combo-panel').forEach(p => p.style.display = 'none');
     btn.classList.add('active');
-    var color = comboColors[btn.dataset.panel] || 'var(--cyan)';
-    btn.style.borderBottomColor = color;
-    btn.style.color = '#fff';
+    btn.style.background = 'var(--yellow)';
+    btn.style.color = 'var(--ink)';
     var panel = document.getElementById(btn.dataset.panel);
     if (panel) { panel.style.display = 'block'; animateComboBars(); }
   }
