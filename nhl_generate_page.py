@@ -47,7 +47,7 @@ ELITE_GOALIES = {
 # --- The Odds API ---
 ODDS_API_KEY  = "f9d5e5c7a85eddd7fad39617a5c163fe"
 VALUE_MIN_PCT = 5.0
-COTE_DEFAUT   = 1.90
+COTE_DEFAUT   = 1.50
 
 GITHUB_TOKEN  = os.environ.get("GH_TOKEN", "")
 GITHUB_REPO   = "Thiboulard/NHL-Stats"
