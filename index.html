@@ -97,6 +97,27 @@
     .combo-pteam{font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;}
     .combo-pprob{font-size:0.65rem;font-weight:600;}
     @keyframes fadeIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
+    /* ---- SIMULATOR ---- */
+    .sim-config{background:rgba(13,27,42,0.8);border:1px solid rgba(0,180,216,0.18);border-radius:6px;padding:1.25rem 1.5rem;margin-bottom:1.5rem;}
+    .sim-config-row{display:flex;flex-wrap:wrap;gap:1.25rem;align-items:flex-end;}
+    .sim-field{display:flex;flex-direction:column;gap:0.3rem;position:relative;min-width:140px;}
+    .sim-label{font-size:0.58rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;}
+    .sim-input{background:rgba(0,0,0,0.35);border:1px solid rgba(0,180,216,0.25);border-radius:3px;padding:0.45rem 0.65rem;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text);width:100%;outline:none;transition:border-color 0.2s;}
+    .sim-input:focus{border-color:var(--cyan);}
+    select.sim-input{cursor:pointer;}
+    .sim-input-unit{position:absolute;right:0.65rem;bottom:0.48rem;font-size:0.65rem;color:var(--muted);pointer-events:none;}
+    .sim-reset-btn{background:rgba(0,180,216,0.1);border:1px solid rgba(0,180,216,0.3);border-radius:3px;padding:0.45rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:var(--cyan);cursor:pointer;transition:all 0.2s;letter-spacing:0.08em;}
+    .sim-reset-btn:hover{background:rgba(0,180,216,0.2);}
+    .sim-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.75rem;margin-bottom:1.5rem;}
+    .sim-kpi{background:rgba(13,27,42,0.7);border:1px solid rgba(0,180,216,0.15);border-radius:5px;padding:1rem 1.25rem;}
+    .sim-kpi-neutral{border-color:rgba(255,255,255,0.08);}
+    .sim-kpi-label{font-size:0.55rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-bottom:0.35rem;}
+    .sim-kpi-val{font-size:1.6rem;line-height:1;margin-bottom:0.3rem;}
+    .sim-kpi-roi{font-size:0.62rem;color:var(--muted);}
+    .sim-chart-wrap{background:rgba(10,14,20,0.6);border:1px solid rgba(0,180,216,0.12);border-radius:5px;padding:1rem 1.25rem;margin-bottom:1.5rem;}
+    .sim-chart-title{font-size:0.6rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;margin-bottom:0.75rem;}
+    .sim-chart-legend{display:flex;gap:1.25rem;margin-top:0.6rem;}
+    .sim-leg{font-size:0.62rem;color:var(--muted);}
   </style>
 </head>
 <body>
@@ -108,7 +129,7 @@
     <div class="puck"></div>
   </div>
   <p class="tagline">Analyse automatique · Probabilites Poisson · Top 20 joueurs du jour</p>
-  <p class="meta-info">Mis a jour le <strong>09/03/2026 a 23:04</strong> · Matchs : <strong>5</strong></p>
+  <p class="meta-info">Mis a jour le <strong>09/03/2026 a 23:11</strong> · Matchs : <strong>5</strong></p>
   
     <div class="global-rate">
       <div class="global-rate-label">TAUX DE REUSSITE GLOBAL</div>
@@ -138,6 +159,7 @@
     <button class="tab-btn" onclick="showTab(this,'tab-combines')">Combines</button>
     <button class="tab-btn" onclick="showTab(this,'tab-history')">Historique</button>
     <button class="tab-btn" onclick="showTab(this,'tab-value')">Value Bets &#9733;</button>
+    <button class="tab-btn" onclick="showTab(this,'tab-simulator')">&#128200; Simulateur</button>
   </div>
 
   <!-- ONGLET AUJOURD HUI -->
@@ -729,6 +751,292 @@
     <div class="section-title" style="margin-top:1.5rem">Value Bets &middot; 09/03/2026</div><p style="font-size:0.68rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6">Value = (prob modele &times; cote bookmaker) &minus; 1 &gt; 5.0%. Betclic en priorite, fallback EU.</p><div class="table-wrap"><table><thead><tr><th>#</th><th>Joueur</th><th>Equipe</th><th>P(Over 0.5)</th><th>Cote</th><th>Value</th><th>Adj. Gardien</th><th>Source</th></tr></thead><tbody><tr style="animation:fadeIn 0.4s ease 0.0s both"><td class="rank">1</td><td class="name">Zach Werenski</td><td class="team">CBJ</td><td>72.6%</td><td style="color:var(--gold);font-weight:600">3</td><td style="color:var(--gold);font-weight:700">+117.7%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">defaut</td></tr><tr style="animation:fadeIn 0.4s ease 0.06s both"><td class="rank">2</td><td class="name">Charlie Coyle</td><td class="team">CBJ</td><td>69.2%</td><td style="color:var(--gold);font-weight:600">3</td><td style="color:var(--gold);font-weight:700">+107.4%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">defaut</td></tr><tr style="animation:fadeIn 0.4s ease 0.12s both"><td class="rank">3</td><td class="name">Artemi Panarin</td><td class="team">LAK</td><td>68.8%</td><td style="color:var(--gold);font-weight:600">3</td><td style="color:var(--gold);font-weight:700">+106.4%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">defaut</td></tr><tr style="animation:fadeIn 0.4s ease 0.18s both"><td class="rank">4</td><td class="name">Kirill Marchenko</td><td class="team">CBJ</td><td>68.5%</td><td style="color:var(--gold);font-weight:600">3</td><td style="color:var(--gold);font-weight:700">+105.6%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">defaut</td></tr><tr style="animation:fadeIn 0.4s ease 0.24s both"><td class="rank">5</td><td class="name">Adrian Kempe</td><td class="team">LAK</td><td>63.3%</td><td style="color:var(--gold);font-weight:600">3</td><td style="color:var(--gold);font-weight:700">+90.0%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">defaut</td></tr><tr style="animation:fadeIn 0.4s ease 0.3s both"><td class="rank">6</td><td class="name">Adam Fantilli</td><td class="team">CBJ</td><td>60.9%</td><td style="color:var(--gold);font-weight:600">3</td><td style="color:var(--gold);font-weight:700">+82.8%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">defaut</td></tr><tr style="animation:fadeIn 0.4s ease 0.36s both"><td class="rank">7</td><td class="name">Mason Marchment</td><td class="team">CBJ</td><td>59.7%</td><td style="color:var(--gold);font-weight:600">3</td><td style="color:var(--gold);font-weight:700">+79.2%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">defaut</td></tr><tr style="animation:fadeIn 0.4s ease 0.42s both"><td class="rank">8</td><td class="name">J.T. Miller</td><td class="team">NYR</td><td>57.8%</td><td style="color:var(--gold);font-weight:600">3</td><td style="color:var(--gold);font-weight:700">+73.3%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">defaut</td></tr><tr style="animation:fadeIn 0.4s ease 0.48s both"><td class="rank">9</td><td class="name">Aliaksei Protas</td><td class="team">WSH</td><td>57.8%</td><td style="color:var(--gold);font-weight:600">2.05</td><td style="color:var(--gold);font-weight:700">+18.4%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">DraftKings</td></tr><tr style="animation:fadeIn 0.4s ease 0.54s both"><td class="rank">10</td><td class="name">Travis Konecny</td><td class="team">PHI</td><td>69.4%</td><td style="color:var(--gold);font-weight:600">1.57</td><td style="color:var(--cyan);font-weight:700">+9.0%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">DraftKings</td></tr><tr style="animation:fadeIn 0.4s ease 0.6s both"><td class="rank">11</td><td class="name">Nick Schmaltz</td><td class="team">UTA</td><td>65.3%</td><td style="color:var(--gold);font-weight:600">1.62</td><td style="color:var(--cyan);font-weight:700">+5.8%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">DraftKings</td></tr><tr style="animation:fadeIn 0.4s ease 0.6599999999999999s both"><td class="rank">12</td><td class="name">Clayton Keller</td><td class="team">UTA</td><td>73.3%</td><td style="color:var(--gold);font-weight:600">1.44</td><td style="color:var(--cyan);font-weight:700">+5.5%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">DraftKings</td></tr><tr style="animation:fadeIn 0.4s ease 0.72s both"><td class="rank">13</td><td class="name">Vincent Trocheck</td><td class="team">NYR</td><td>61.9%</td><td style="color:var(--gold);font-weight:600">1.7</td><td style="color:var(--cyan);font-weight:700">+5.3%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">DraftKings</td></tr><tr style="animation:fadeIn 0.4s ease 0.78s both"><td class="rank">14</td><td class="name">Dylan Cozens</td><td class="team">OTT</td><td>60.5%</td><td style="color:var(--gold);font-weight:600">1.74</td><td style="color:var(--cyan);font-weight:700">+5.3%</td><td style="color:var(--muted)">—</td><td style="color:var(--muted);font-size:0.62rem">DraftKings</td></tr></tbody></table></div>
   </div>
 
+  <!-- ONGLET Pour Thomas la chipie -->
+  <div class="tab-content" id="tab-simulator">
+    <script>window.SIM_TOP_PLAYERS = [{"name": "Clayton Keller", "team": "UTA", "prob": 0.7329, "cote": 1.44}, {"name": "Zach Werenski", "team": "CBJ", "prob": 0.7256, "cote": 3}, {"name": "Travis Konecny", "team": "PHI", "prob": 0.6943, "cote": 1.57}, {"name": "Charlie Coyle", "team": "CBJ", "prob": 0.6915, "cote": 3}, {"name": "Artemi Panarin", "team": "LAK", "prob": 0.688, "cote": 3}, {"name": "Tim Stützle", "team": "OTT", "prob": 0.6861, "cote": 1.43}, {"name": "Kirill Marchenko", "team": "CBJ", "prob": 0.6853, "cote": 3}, {"name": "Dylan Guenther", "team": "UTA", "prob": 0.6553, "cote": 1.55}, {"name": "Nick Schmaltz", "team": "UTA", "prob": 0.6529, "cote": 1.62}, {"name": "Brady Tkachuk", "team": "OTT", "prob": 0.6451, "cote": 1.48}, {"name": "Mika Zibanejad", "team": "NYR", "prob": 0.6449, "cote": 1.57}, {"name": "Adrian Kempe", "team": "LAK", "prob": 0.6332, "cote": 3}, {"name": "Vincent Trocheck", "team": "NYR", "prob": 0.6193, "cote": 1.7}, {"name": "Adam Fantilli", "team": "CBJ", "prob": 0.6092, "cote": 3}, {"name": "Jakob Chychrun", "team": "WSH", "prob": 0.6068, "cote": 1.65}, {"name": "Dylan Cozens", "team": "OTT", "prob": 0.6049, "cote": 1.74}, {"name": "Mason Marchment", "team": "CBJ", "prob": 0.5974, "cote": 3}, {"name": "Drake Batherson", "team": "OTT", "prob": 0.5832, "cote": 1.62}, {"name": "J.T. Miller", "team": "NYR", "prob": 0.5777, "cote": 3}, {"name": "Aliaksei Protas", "team": "WSH", "prob": 0.5777, "cote": 2.05}];</script>
+    
+  <div class="section-title" style="margin-top:1.5rem">Simulateur de Revenus &#8212; Gestion de Risque</div>
+  <p style="font-size:0.68rem;color:var(--muted);margin-bottom:1.5rem;line-height:1.7">
+    Rejoue tes picks historiques avec differentes strategies de mise.<br>
+    <strong style="color:var(--cyan)">Flat Bet</strong> : mise fixe identique a chaque pick &middot;
+    <strong style="color:var(--gold)">% Fixe</strong> : % constant de ta bankroll &middot;
+    <strong style="color:#c77dff">Demi-Kelly</strong> : mise optimale mathematique (Kelly/2)
+  </p>
+
+  <!-- CONFIGURATION -->
+  <div class="sim-config">
+    <div class="sim-config-row">
+      <div class="sim-field">
+        <label class="sim-label">Bankroll de depart (€)</label>
+        <input id="sim-bankroll" type="number" value="500" min="10" max="100000" step="10" class="sim-input" oninput="runSim()"/>
+      </div>
+      <div class="sim-field">
+        <label class="sim-label">Mise flat (€)</label>
+        <input id="sim-flat" type="number" value="10" min="1" max="10000" step="1" class="sim-input" oninput="runSim()"/>
+      </div>
+      <div class="sim-field">
+        <label class="sim-label">Mise % fixe de la bankroll</label>
+        <input id="sim-pct" type="number" value="2" min="0.5" max="25" step="0.5" class="sim-input" oninput="runSim()"/>
+        <span class="sim-input-unit">%</span>
+      </div>
+      <div class="sim-field">
+        <label class="sim-label">Kelly fraction</label>
+        <select id="sim-kelly-frac" class="sim-input" onchange="runSim()">
+          <option value="0.5" selected>Demi-Kelly (recommande)</option>
+          <option value="0.25">Quart-Kelly (prudent)</option>
+          <option value="1.0">Kelly complet (agressif)</option>
+        </select>
+      </div>
+    </div>
+    <div class="sim-config-row" style="margin-top:0.75rem;">
+      <div class="sim-field">
+        <label class="sim-label">Cote par defaut (si inconnue)</label>
+        <input id="sim-cote-def" type="number" value="3" min="1.1" max="10" step="0.1" class="sim-input" oninput="runSim()"/>
+      </div>
+      <div class="sim-field" style="align-self:flex-end">
+        <button class="sim-reset-btn" onclick="resetSim()">&#8635; Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="sim-kpis" id="sim-kpis">
+    <div class="sim-kpi" id="kpi-flat">
+      <div class="sim-kpi-label">Flat Bet</div>
+      <div class="sim-kpi-val" id="kpi-flat-val">--</div>
+      <div class="sim-kpi-roi" id="kpi-flat-roi">ROI --</div>
+    </div>
+    <div class="sim-kpi" id="kpi-pct">
+      <div class="sim-kpi-label">% Fixe</div>
+      <div class="sim-kpi-val" id="kpi-pct-val">--</div>
+      <div class="sim-kpi-roi" id="kpi-pct-roi">ROI --</div>
+    </div>
+    <div class="sim-kpi" id="kpi-kelly">
+      <div class="sim-kpi-label">Demi-Kelly</div>
+      <div class="sim-kpi-val" id="kpi-kelly-val">--</div>
+      <div class="sim-kpi-roi" id="kpi-kelly-roi">ROI --</div>
+    </div>
+    <div class="sim-kpi sim-kpi-neutral">
+      <div class="sim-kpi-label">Picks joues</div>
+      <div class="sim-kpi-val" id="kpi-picks">--</div>
+      <div class="sim-kpi-roi" id="kpi-winrate">Taux --</div>
+    </div>
+  </div>
+
+  <!-- GRAPHIQUE SVG -->
+  <div class="sim-chart-wrap">
+    <div class="sim-chart-title">Evolution de la Bankroll</div>
+    <svg id="sim-chart" viewBox="0 0 800 220" preserveAspectRatio="none" style="width:100%;height:220px;display:block;"></svg>
+    <div class="sim-chart-legend">
+      <span class="sim-leg" style="color:var(--cyan)">&#9632; Flat Bet</span>
+      <span class="sim-leg" style="color:var(--gold)">&#9632; % Fixe</span>
+      <span class="sim-leg" style="color:#c77dff">&#9632; Demi-Kelly</span>
+    </div>
+  </div>
+
+  <!-- KELLY RECOMMANDATIONS DU JOUR -->
+  <div class="section-title" style="margin-top:2rem">Mises Kelly Recommandees &middot; Picks actifs</div>
+  <p style="font-size:0.65rem;color:var(--muted);margin-bottom:1rem">
+    Formule : f = (p &times; b &minus; (1&minus;p)) / b &nbsp;&middot;&nbsp; Applique la fraction selectionnee ci-dessus &nbsp;&middot;&nbsp; Mise max = 10% bankroll
+  </p>
+  <div id="sim-kelly-table">
+    <div style="color:var(--muted);font-size:0.72rem">Calcul en cours...</div>
+  </div>
+
+  <script id="sim-script">
+  (function() {
+    var PICKS = [{"date": "2026-03-08", "name": "Nikita Kucherov", "team": "TBL", "prob": 0.8734, "cote": 3, "win": true}, {"date": "2026-03-08", "name": "Leon Draisaitl", "team": "EDM", "prob": 0.8453, "cote": 3, "win": true}, {"date": "2026-03-08", "name": "Evan Bouchard", "team": "EDM", "prob": 0.8233, "cote": 3, "win": true}, {"date": "2026-03-08", "name": "Matt Boldy", "team": "MIN", "prob": 0.7981, "cote": 3, "win": false}, {"date": "2026-03-08", "name": "Connor McDavid", "team": "EDM", "prob": 0.7981, "cote": 3, "win": true}, {"date": "2026-03-08", "name": "Kirill Kaprizov", "team": "MIN", "prob": 0.7842, "cote": 3, "win": true}, {"date": "2026-03-08", "name": "Quinn Hughes", "team": "MIN", "prob": 0.7841, "cote": 3, "win": true}, {"date": "2026-03-08", "name": "Nathan MacKinnon", "team": "COL", "prob": 0.7692, "cote": 3, "win": true}, {"date": "2026-03-08", "name": "Martin Necas", "team": "COL", "prob": 0.7534, "cote": 3, "win": false}, {"date": "2026-03-08", "name": "Jake Guentzel", "team": "TBL", "prob": 0.7363, "cote": 3, "win": false}, {"date": "2026-03-08", "name": "Brayden Point", "team": "TBL", "prob": 0.7363, "cote": 3, "win": true}, {"date": "2026-03-08", "name": "Rasmus Dahlin", "team": "BUF", "prob": 0.7183, "cote": 3, "win": true}, {"date": "2026-03-08", "name": "Jason Robertson", "team": "DAL", "prob": 0.7182, "cote": 3, "win": false}, {"date": "2026-03-08", "name": "David Pastrnak", "team": "BOS", "prob": 0.6989, "cote": 3, "win": true}, {"date": "2026-03-08", "name": "Charlie McAvoy", "team": "BOS", "prob": 0.6988, "cote": 3, "win": true}, {"date": "2026-03-08", "name": "Jack Hughes", "team": "NJD", "prob": 0.6988, "cote": 3, "win": false}, {"date": "2026-03-08", "name": "Matt Duchene", "team": "DAL", "prob": 0.6781, "cote": 3, "win": true}, {"date": "2026-03-08", "name": "Mats Zuccarello", "team": "MIN", "prob": 0.678, "cote": 3, "win": false}, {"date": "2026-03-08", "name": "Cutter Gauthier", "team": "ANA", "prob": 0.678, "cote": 3, "win": false}];
+
+    function runSim() {
+      var bankroll0 = parseFloat(document.getElementById('sim-bankroll').value) || 500;
+      var flatMise  = parseFloat(document.getElementById('sim-flat').value)     || 10;
+      var pctMise   = parseFloat(document.getElementById('sim-pct').value)      / 100 || 0.02;
+      var kellyFrac = parseFloat(document.getElementById('sim-kelly-frac').value) || 0.5;
+      var coteDef   = parseFloat(document.getElementById('sim-cote-def').value)  || 3;
+
+      if (!PICKS.length) {
+        document.getElementById('kpi-picks').textContent = '0';
+        document.getElementById('kpi-winrate').textContent = 'Pas encore de resultats';
+        document.getElementById('sim-kelly-table').innerHTML = '<div style="color:var(--muted);font-size:0.72rem">Aucun resultat dans l historique pour l instant.</div>';
+        return;
+      }
+
+      // --- Simulation ---
+      var bFlat   = bankroll0, bPct = bankroll0, bKelly = bankroll0;
+      var curvFlat=[bankroll0], curvPct=[bankroll0], curvKelly=[bankroll0];
+      var wins=0, total=0;
+      var totalWageredFlat=0, totalWageredPct=0, totalWageredKelly=0;
+
+      for (var i=0; i<PICKS.length; i++) {
+        var pick = PICKS[i];
+        var cote = pick.cote && pick.cote > 1 ? pick.cote : coteDef;
+        var prob = pick.prob > 1 ? pick.prob/100 : pick.prob;
+        var won  = pick.win;
+        total++;
+        if (won) wins++;
+
+        // Flat bet
+        var mFlat = Math.min(flatMise, bFlat);
+        totalWageredFlat += mFlat;
+        bFlat += won ? mFlat*(cote-1) : -mFlat;
+        bFlat  = Math.max(bFlat, 0);
+
+        // % fixe
+        var mPct = bPct * pctMise;
+        totalWageredPct += mPct;
+        bPct += won ? mPct*(cote-1) : -mPct;
+        bPct  = Math.max(bPct, 0);
+
+        // Demi-Kelly
+        var kelly = (prob*(cote-1) - (1-prob)) / (cote-1);
+        kelly = Math.max(kelly, 0) * kellyFrac;
+        kelly = Math.min(kelly, 0.10); // cap 10%
+        var mKelly = bKelly * kelly;
+        totalWageredKelly += mKelly;
+        bKelly += won ? mKelly*(cote-1) : -mKelly;
+        bKelly  = Math.max(bKelly, 0);
+
+        curvFlat.push(Math.round(bFlat*100)/100);
+        curvPct.push(Math.round(bPct*100)/100);
+        curvKelly.push(Math.round(bKelly*100)/100);
+      }
+
+      // KPIs
+      function fmtVal(v, b0) {
+        var diff = v - b0;
+        var col  = diff >= 0 ? 'var(--cyan)' : 'var(--red)';
+        return '<span style="color:'+col+';font-family:'Bebas Neue',sans-serif;font-size:1.9rem">'+(diff>=0?'+':'')+Math.round(diff)+'€</span>';
+      }
+      function fmtRoi(wagered, final, b0) {
+        if (!wagered) return 'ROI --';
+        var roi = ((final-b0)/wagered*100);
+        var col = roi>=0?'var(--cyan)':'var(--red)';
+        return 'ROI <span style="color:'+col+';font-weight:600">'+(roi>=0?'+':'')+roi.toFixed(1)+'%</span> · Final <strong>'+Math.round(final)+'€</strong>';
+      }
+
+      document.getElementById('kpi-flat-val').innerHTML  = fmtVal(bFlat,  bankroll0);
+      document.getElementById('kpi-pct-val').innerHTML   = fmtVal(bPct,   bankroll0);
+      document.getElementById('kpi-kelly-val').innerHTML = fmtVal(bKelly, bankroll0);
+      document.getElementById('kpi-flat-roi').innerHTML  = fmtRoi(totalWageredFlat,  bFlat,  bankroll0);
+      document.getElementById('kpi-pct-roi').innerHTML   = fmtRoi(totalWageredPct,   bPct,   bankroll0);
+      document.getElementById('kpi-kelly-roi').innerHTML = fmtRoi(totalWageredKelly, bKelly, bankroll0);
+      document.getElementById('kpi-picks').textContent   = total;
+      document.getElementById('kpi-winrate').textContent = 'Taux ' + (total?Math.round(wins/total*100):'--') + '% ('+wins+'/'+total+')';
+
+      // --- SVG Chart ---
+      drawChart(curvFlat, curvPct, curvKelly, bankroll0);
+
+      // --- Tableau Kelly recommandations ---
+      buildKellyTable(bankroll0, kellyFrac, coteDef);
+    }
+
+    function drawChart(flat, pct, kelly, b0) {
+      var svg = document.getElementById('sim-chart');
+      var W=800, H=220, PAD_L=64, PAD_R=16, PAD_T=18, PAD_B=28;
+      var all = flat.concat(pct, kelly);
+      var minV = Math.min.apply(null,all), maxV = Math.max.apply(null,all);
+      var range = maxV-minV || 1;
+      var n = flat.length;
+
+      function sx(i) { return PAD_L + (i/(n-1||1))*(W-PAD_L-PAD_R); }
+      function sy(v) { return PAD_T + (1-(v-minV)/range)*(H-PAD_T-PAD_B); }
+
+      function makePath(arr, color) {
+        var d = arr.map(function(v,i){return (i?'L':'M')+sx(i).toFixed(1)+' '+sy(v).toFixed(1);}).join(' ');
+        return '<path d="'+d+'" stroke="'+color+'" stroke-width="2" fill="none" stroke-linejoin="round"/>';
+      }
+      function makeArea(arr, color) {
+        var d = arr.map(function(v,i){return (i?'L':'M')+sx(i).toFixed(1)+' '+sy(v).toFixed(1);}).join(' ');
+        d += ' L'+sx(n-1).toFixed(1)+' '+sy(minV).toFixed(1)+' L'+sx(0).toFixed(1)+' '+sy(minV).toFixed(1)+' Z';
+        return '<path d="'+d+'" fill="'+color+'" fill-opacity="0.07" stroke="none"/>';
+      }
+
+      // Grid + baseline b0
+      var gridLines = '';
+      for (var gi=0; gi<=4; gi++) {
+        var gv = minV + gi/4*range;
+        var gy = sy(gv).toFixed(1);
+        gridLines += '<line x1="'+PAD_L+'" y1="'+gy+'" x2="'+(W-PAD_R)+'" y2="'+gy+'" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>';
+        gridLines += '<text x="'+(PAD_L-6)+'" y="'+(parseFloat(gy)+4)+'" fill="rgba(180,180,180,0.5)" font-size="9" text-anchor="end">'+Math.round(gv)+'</text>';
+      }
+      var b0y = sy(b0).toFixed(1);
+      var baseLine = '<line x1="'+PAD_L+'" y1="'+b0y+'" x2="'+(W-PAD_R)+'" y2="'+b0y+'" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="4 3"/>';
+      baseLine += '<text x="'+(PAD_L-6)+'" y="'+(parseFloat(b0y)+4)+'" fill="rgba(255,255,255,0.4)" font-size="9" text-anchor="end">'+Math.round(b0)+'</text>';
+
+      svg.innerHTML = gridLines + baseLine +
+        makeArea(flat, '#00b4d8') + makeArea(pct, '#f4a21e') + makeArea(kelly, '#c77dff') +
+        makePath(flat, '#00b4d8') + makePath(pct, '#f4a21e') + makePath(kelly, '#c77dff');
+    }
+
+    function buildKellyTable(bankroll, kellyFrac, coteDef) {
+      // On prend les picks de la derniere entree (aujourd hui ou dernier jour)
+      var lastDay = null;
+      // On cherche le jour avec des joueurs sans result (= picks actifs du jour)
+      for (var i=0; i<PICKS.length; i++) {
+        // rien a faire ici, on utilise window.TOP_PLAYERS injecte separement
+      }
+      var topPlayers = window.SIM_TOP_PLAYERS || [];
+      if (!topPlayers.length) {
+        document.getElementById('sim-kelly-table').innerHTML =
+          '<div style="color:var(--muted);font-size:0.72rem">Aucun pick actif aujourd hui.</div>';
+        return;
+      }
+
+      var rows = '';
+      topPlayers.forEach(function(p, idx) {
+        var cote = p.cote && p.cote>1 ? p.cote : coteDef;
+        var prob = p.prob > 1 ? p.prob/100 : p.prob;
+        var kelly = (prob*(cote-1) - (1-prob)) / (cote-1);
+        kelly = Math.max(kelly,0) * kellyFrac;
+        kelly = Math.min(kelly, 0.10);
+        var mise = bankroll * kelly;
+        if (mise < 0.5) return;
+        var kellyPct = (kelly*100).toFixed(1);
+        var miseCol = kelly>=0.05?'var(--gold)':(kelly>=0.02?'var(--cyan)':'var(--muted)');
+        var signal  = kelly>=0.06?'<span class="over-tag over-strong">FORT</span>':
+                     (kelly>=0.03?'<span class="over-tag over-mid">MOYEN</span>':'<span style="color:var(--muted);font-size:0.62rem">FAIBLE</span>');
+        rows += '<tr>'
+          +'<td class="rank">'+(idx+1)+'</td>'
+          +'<td class="name">'+p.name+'</td>'
+          +'<td class="team">'+p.team+'</td>'
+          +'<td>'+Math.round(prob*100)+'%</td>'
+          +'<td style="color:var(--gold)">'+cote+'</td>'
+          +'<td style="color:'+miseCol+';font-weight:700">'+kellyPct+'%</td>'
+          +'<td style="color:'+miseCol+';font-weight:700">'+mise.toFixed(2)+'€</td>'
+          +'<td>'+signal+'</td>'
+          +'</tr>';
+      });
+
+      if (!rows) {
+        document.getElementById('sim-kelly-table').innerHTML =
+          '<div style="color:var(--muted);font-size:0.72rem">Aucun pick avec une mise Kelly positive aujourd hui (edge insuffisant).</div>';
+        return;
+      }
+
+      document.getElementById('sim-kelly-table').innerHTML =
+        '<div class="table-wrap"><table>'
+        +'<thead><tr><th>#</th><th>Joueur</th><th>Equipe</th><th>P(Over)</th><th>Cote</th><th>Kelly %</th><th>Mise (€)</th><th>Signal</th></tr></thead>'
+        +'<tbody>'+rows+'</tbody>'
+        +'</table></div>';
+    }
+
+    function resetSim() {
+      document.getElementById('sim-bankroll').value = '500';
+      document.getElementById('sim-flat').value     = '10';
+      document.getElementById('sim-pct').value      = '2';
+      document.getElementById('sim-kelly-frac').value = '0.5';
+      document.getElementById('sim-cote-def').value = '3';
+      runSim();
+    }
+
+    window.runSim = runSim;
+    window.resetSim = resetSim;
+    runSim();
+  })();
+  </script>
+
+  </div>
+
   <!-- ONGLET HISTORIQUE -->
   <div class="tab-content" id="tab-history">
     <div class="section-title" style="margin-top:1.5rem">Historique des picks</div>
@@ -914,7 +1222,7 @@
 </main>
 
 <footer>
-  <div>NHL STATS BOT · v8.0 · Python + NHL API officielle · Genere le 09/03/2026 a 23:04</div>
+  <div>NHL STATS BOT · v8.0 · Python + NHL API officielle · Genere le 09/03/2026 a 23:11</div>
   <div style="margin-top:0.4rem">
     <a href="https://github.com/Thiboulard/NHL-Stats" target="_blank">GitHub</a>
     · <a href="https://api-web.nhle.com" target="_blank">NHL API</a>
