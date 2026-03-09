@@ -24,7 +24,7 @@ import base64
 
 LINE          = 0.5
 SEASON        = "20252026"
-LAST_N_GAMES  = 27
+LAST_N_GAMES  = 23
 RETRY_MAX     = 3
 RETRY_DELAY   = 3
 TOP_N         = 20
@@ -1400,7 +1400,7 @@ def build_html(games, top_players, history, generated_at, odds_map=None, value_p
     {value_bets_html}
   </div>
 
-  <!-- ONGLET SIMULATEUR -->
+  <!-- ONGLET Pour Thomas la chipie -->
   <div class="tab-content" id="tab-simulator">
     <script>window.SIM_TOP_PLAYERS = {sim_top_players_json};</script>
     {simulator_html}
