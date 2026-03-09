@@ -32,7 +32,7 @@ TOP_N         = 20
 # --- Filtres modele V7 ---
 MIN_TOI_FORWARD    = 12.0
 MIN_TOI_DEFENSEMAN = 18.0
-MIN_SCORE_RATE     = 0.40
+MIN_SCORE_RATE     = 0.30
 
 # --- Gardiens ---
 GOALIE_BACKUP_BONUS = 0.06
