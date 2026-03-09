@@ -108,7 +108,7 @@
     <div class="puck"></div>
   </div>
   <p class="tagline">Analyse automatique · Probabilites Poisson · Top 20 joueurs du jour</p>
-  <p class="meta-info">Mis a jour le <strong>09/03/2026 a 16:45</strong> · Matchs : <strong>5</strong></p>
+  <p class="meta-info">Mis a jour le <strong>09/03/2026 a 17:06</strong> · Matchs : <strong>5</strong></p>
   
     <div class="global-rate">
       <div class="global-rate-label">TAUX DE REUSSITE GLOBAL</div>
@@ -137,6 +137,7 @@
     <button class="tab-btn active" onclick="showTab(this,'tab-today')">Aujourd hui</button>
     <button class="tab-btn" onclick="showTab(this,'tab-combines')">Combines</button>
     <button class="tab-btn" onclick="showTab(this,'tab-history')">Historique</button>
+    <button class="tab-btn" onclick="showTab(this,'tab-value')">Value Bets &#9733;</button>
   </div>
 
   <!-- ONGLET AUJOURD HUI -->
@@ -151,7 +152,7 @@
           <tr>
             <th>#</th><th>Joueur</th><th>Equipe</th>
             <th>Avg PTS</th><th>TOI moy</th>
-            <th>Expected</th><th>P(Over 0.5)</th><th>Signal</th>
+            <th>Expected</th><th>P(Over 0.5)</th><th>Cote</th><th>Signal</th>
           </tr>
         </thead>
         <tbody>
@@ -170,6 +171,7 @@
               <span class="prob-pct" style="color:var(--cyan)">71.8%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-strong">UP FORT</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.05s both">
@@ -187,6 +189,7 @@
               <span class="prob-pct" style="color:var(--cyan)">71.8%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-strong">UP FORT</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.1s both">
@@ -204,6 +207,7 @@
               <span class="prob-pct" style="color:var(--cyan)">71.8%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-strong">UP FORT</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.15000000000000002s both">
@@ -221,6 +225,7 @@
               <span class="prob-pct" style="color:var(--cyan)">71.8%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-strong">UP FORT</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.2s both">
@@ -238,6 +243,7 @@
               <span class="prob-pct" style="color:var(--gold)">69.9%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.25s both">
@@ -255,6 +261,7 @@
               <span class="prob-pct" style="color:var(--gold)">67.8%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.30000000000000004s both">
@@ -272,6 +279,7 @@
               <span class="prob-pct" style="color:var(--gold)">67.8%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.35000000000000003s both">
@@ -289,6 +297,7 @@
               <span class="prob-pct" style="color:var(--gold)">67.8%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.4s both">
@@ -306,6 +315,7 @@
               <span class="prob-pct" style="color:var(--gold)">67.8%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.45s both">
@@ -323,6 +333,7 @@
               <span class="prob-pct" style="color:var(--gold)">65.6%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.5s both">
@@ -340,6 +351,7 @@
               <span class="prob-pct" style="color:var(--gold)">63.2%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.55s both">
@@ -357,6 +369,7 @@
               <span class="prob-pct" style="color:var(--gold)">63.2%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.6000000000000001s both">
@@ -374,6 +387,7 @@
               <span class="prob-pct" style="color:var(--gold)">63.2%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.65s both">
@@ -391,6 +405,7 @@
               <span class="prob-pct" style="color:var(--gold)">63.2%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td><span class="over-tag over-mid">UP MID</span></td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.7000000000000001s both">
@@ -408,6 +423,7 @@
               <span class="prob-pct" style="color:var(--gold)">60.7%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td>--</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.75s both">
@@ -425,6 +441,7 @@
               <span class="prob-pct" style="color:var(--gold)">60.7%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td>--</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.8s both">
@@ -442,6 +459,7 @@
               <span class="prob-pct" style="color:var(--muted)">58.0%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td>--</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.8500000000000001s both">
@@ -459,6 +477,7 @@
               <span class="prob-pct" style="color:var(--muted)">58.0%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td>--</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.9s both">
@@ -476,6 +495,7 @@
               <span class="prob-pct" style="color:var(--muted)">58.0%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td>--</td>
         </tr>
         <tr style="animation:fadeIn 0.4s ease 0.9500000000000001s both">
@@ -493,6 +513,7 @@
               <span class="prob-pct" style="color:var(--muted)">58.0%</span>
             </div>
           </td>
+          <td><span style="color:var(--gold);font-weight:600">1.9</span></td>
           <td>--</td>
         </tr></tbody>
       </table>
@@ -703,6 +724,11 @@
                 </div></div></div>
   </div>
 
+  <!-- ONGLET VALUE BETS -->
+  <div class="tab-content" id="tab-value">
+    
+  </div>
+
   <!-- ONGLET HISTORIQUE -->
   <div class="tab-content" id="tab-history">
     <div class="section-title" style="margin-top:1.5rem">Historique des picks</div>
@@ -888,7 +914,7 @@
 </main>
 
 <footer>
-  <div>NHL STATS BOT · v8.0 · Python + NHL API officielle · Genere le 09/03/2026 a 16:45</div>
+  <div>NHL STATS BOT · v8.0 · Python + NHL API officielle · Genere le 09/03/2026 a 17:06</div>
   <div style="margin-top:0.4rem">
     <a href="https://github.com/Thiboulard/NHL-Stats" target="_blank">GitHub</a>
     · <a href="https://api-web.nhle.com" target="_blank">NHL API</a>
