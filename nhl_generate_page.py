@@ -24,7 +24,7 @@ import base64
 
 LINE          = 0.5
 SEASON        = "20252026"
-LAST_N_GAMES  = 27
+LAST_N_GAMES  = 23
 RETRY_MAX     = 3
 RETRY_DELAY   = 3
 TOP_N         = 20
