@@ -669,7 +669,7 @@ def fetch_odds():
                     "regions":    "us",
                     "markets":    "player_points",
                     "oddsFormat": "decimal",
-                    "bookmakers": "draftkings,fanduel,betmgm",
+                    "bookmakers": "draftkings,fanduel,betmgm",  # les plus fiables
                 },
                 timeout=15,
             )
@@ -685,20 +685,18 @@ def fetch_odds():
                         # On veut uniquement Over 0.5
                         if outcome.get("point", 0) != 0.5:
                             continue
-                        # Vérifie que c'est bien un Over (pas Under)
-                        outcome_name = outcome.get("name", "").lower()
-                        desc = outcome.get("description", "").lower()
-                        if "under" in outcome_name or "under" in desc:
+                        if "over" not in outcome.get("name", "").lower() and \
+                           "over" not in outcome.get("description", "").lower():
                             continue
-                        # Le nom du joueur est dans "description" chez la plupart des US bookmakers
-                        raw_name = outcome.get("description") or outcome.get("name", "")
-                        name_key = _normalize_name(raw_name)
+                        # Certaines API mettent le nom du joueur dans "description"
+                        name = (outcome.get("description") or outcome.get("name", "")).lower().strip()
                         price = outcome.get("price", 0)
-                        if name_key and price > 1 and (name_key not in odds_map or price > odds_map[name_key][0]):
-                            odds_map[name_key] = (price, bm.get("title", "US"))
+                        if name and (name not in odds_map or price > odds_map[name][0]):
+                            odds_map[name] = (price, bm.get("title", "US"))
 
             time.sleep(0.4)
 
+        print("     Exemple cotes:", list(odds_map.items())[:3])
         print("     {} cotes recuperees".format(len(odds_map)))
         return odds_map
 
