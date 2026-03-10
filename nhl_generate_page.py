@@ -1581,7 +1581,7 @@ def main():
             "played":       0,
         })
         # Garde les 30 derniers jours
-        history["days"] = sorted(history["days"], key=lambda d: d["date"], reverse=True)[:30]
+        history["days"] = sorted(history["days"], key=lambda d: d["date"], reverse=True)
     else:
         print("\n     Aucun match aujourd hui.")
         odds_map    = {}
