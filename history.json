@@ -1,6 +1,325 @@
 {
   "days": [
     {
+      "date": "2026-03-17",
+      "matchups": [
+        "NYI vs TOR",
+        "BOS vs MTL",
+        "CAR vs CBJ",
+        "MIN vs CHI",
+        "NSH vs WPG",
+        "SJS vs EDM",
+        "FLA vs VAN",
+        "BUF vs VGK",
+        "TBL vs SEA"
+      ],
+      "players": [
+        {
+          "id": 8476453,
+          "name": "Nikita Kucherov",
+          "team": "TBL",
+          "pos": "F",
+          "avg_points": 1.921,
+          "avg_toi": 20.3,
+          "expected": 1.9214,
+          "p_over": 0.8536,
+          "p_over_pct": 85.4,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8478402,
+          "name": "Connor McDavid",
+          "team": "EDM",
+          "pos": "F",
+          "avg_points": 1.644,
+          "avg_toi": 23.7,
+          "expected": 1.644,
+          "p_over": 0.8068,
+          "p_over_pct": 80.7,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8477934,
+          "name": "Leon Draisaitl",
+          "team": "EDM",
+          "pos": "F",
+          "avg_points": 1.565,
+          "avg_toi": 21.1,
+          "expected": 1.5645,
+          "p_over": 0.7908,
+          "p_over_pct": 79.1,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8480803,
+          "name": "Evan Bouchard",
+          "team": "EDM",
+          "pos": "D",
+          "avg_points": 1.421,
+          "avg_toi": 25.2,
+          "expected": 1.4209,
+          "p_over": 0.7585,
+          "p_over_pct": 75.8,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8484801,
+          "name": "Macklin Celebrini",
+          "team": "SJS",
+          "pos": "F",
+          "avg_points": 1.414,
+          "avg_toi": 22.3,
+          "expected": 1.4143,
+          "p_over": 0.7569,
+          "p_over_pct": 75.7,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8477956,
+          "name": "David Pastrnak",
+          "team": "BOS",
+          "pos": "F",
+          "avg_points": 1.364,
+          "avg_toi": 21.6,
+          "expected": 1.3637,
+          "p_over": 0.7443,
+          "p_over_pct": 74.4,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8480018,
+          "name": "Nick Suzuki",
+          "team": "MTL",
+          "pos": "F",
+          "avg_points": 1.313,
+          "avg_toi": 20.7,
+          "expected": 1.3129,
+          "p_over": 0.731,
+          "p_over_pct": 73.1,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8476460,
+          "name": "Mark Scheifele",
+          "team": "WPG",
+          "pos": "F",
+          "avg_points": 1.307,
+          "avg_toi": 22.3,
+          "expected": 1.3073,
+          "p_over": 0.7295,
+          "p_over_pct": 73.0,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8480800,
+          "name": "Quinn Hughes",
+          "team": "MIN",
+          "pos": "D",
+          "avg_points": 1.273,
+          "avg_toi": 28.1,
+          "expected": 1.2729,
+          "p_over": 0.72,
+          "p_over_pct": 72.0,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8478427,
+          "name": "Sebastian Aho",
+          "team": "CAR",
+          "pos": "F",
+          "avg_points": 1.221,
+          "avg_toi": 19.6,
+          "expected": 1.2209,
+          "p_over": 0.705,
+          "p_over_pct": 70.5,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8478010,
+          "name": "Brayden Point",
+          "team": "TBL",
+          "pos": "F",
+          "avg_points": 1.209,
+          "avg_toi": 17.5,
+          "expected": 1.2091,
+          "p_over": 0.7015,
+          "p_over_pct": 70.2,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8475913,
+          "name": "Mark Stone",
+          "team": "VGK",
+          "pos": "F",
+          "avg_points": 1.207,
+          "avg_toi": 19.0,
+          "expected": 1.2072,
+          "p_over": 0.701,
+          "p_over_pct": 70.1,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8480839,
+          "name": "Rasmus Dahlin",
+          "team": "BUF",
+          "pos": "D",
+          "avg_points": 1.202,
+          "avg_toi": 24.9,
+          "expected": 1.2018,
+          "p_over": 0.6993,
+          "p_over_pct": 69.9,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8481604,
+          "name": "Pavel Dorofeyev",
+          "team": "VGK",
+          "pos": "F",
+          "avg_points": 1.176,
+          "avg_toi": 17.3,
+          "expected": 1.1763,
+          "p_over": 0.6916,
+          "p_over_pct": 69.2,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8481557,
+          "name": "Matt Boldy",
+          "team": "MIN",
+          "pos": "F",
+          "avg_points": 1.176,
+          "avg_toi": 20.2,
+          "expected": 1.176,
+          "p_over": 0.6915,
+          "p_over_pct": 69.2,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8479325,
+          "name": "Charlie McAvoy",
+          "team": "BOS",
+          "pos": "D",
+          "avg_points": 1.16,
+          "avg_toi": 24.5,
+          "expected": 1.1599,
+          "p_over": 0.6865,
+          "p_over_pct": 68.6,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8478483,
+          "name": "Mitch Marner",
+          "team": "VGK",
+          "pos": "F",
+          "avg_points": 1.152,
+          "avg_toi": 19.3,
+          "expected": 1.1516,
+          "p_over": 0.6839,
+          "p_over_pct": 68.4,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8478460,
+          "name": "Zach Werenski",
+          "team": "CBJ",
+          "pos": "D",
+          "avg_points": 1.15,
+          "avg_toi": 26.3,
+          "expected": 1.1503,
+          "p_over": 0.6835,
+          "p_over_pct": 68.4,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8479420,
+          "name": "Tage Thompson",
+          "team": "BUF",
+          "pos": "F",
+          "avg_points": 1.123,
+          "avg_toi": 19.6,
+          "expected": 1.1229,
+          "p_over": 0.6747,
+          "p_over_pct": 67.5,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8479314,
+          "name": "Matthew Tkachuk",
+          "team": "FLA",
+          "pos": "F",
+          "avg_points": 1.117,
+          "avg_toi": 18.5,
+          "expected": 1.1175,
+          "p_over": 0.6729,
+          "p_over_pct": 67.3,
+          "n_games": 19,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        }
+      ],
+      "success_rate": null,
+      "wins": 0,
+      "played": 0
+    },
+    {
       "date": "2026-03-16",
       "matchups": [
         "CGY vs DET",
@@ -22,8 +341,8 @@
           "p_over_pct": 81.0,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8480039,
@@ -37,8 +356,8 @@
           "p_over_pct": 73.6,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8480027,
@@ -52,8 +371,8 @@
           "p_over_pct": 73.6,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8478550,
@@ -67,8 +386,8 @@
           "p_over_pct": 72.2,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8477956,
@@ -82,8 +401,8 @@
           "p_over_pct": 71.9,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 2
         },
         {
           "id": 8482740,
@@ -97,8 +416,8 @@
           "p_over_pct": 69.4,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8476459,
@@ -112,8 +431,8 @@
           "p_over_pct": 68.7,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8479325,
@@ -127,8 +446,8 @@
           "p_over_pct": 68.3,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8478420,
@@ -142,7 +461,7 @@
           "p_over_pct": 68.2,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
+          "result": "no_game",
           "points_scored": null
         },
         {
@@ -157,8 +476,8 @@
           "p_over_pct": 67.2,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 3
         },
         {
           "id": 8476389,
@@ -172,8 +491,8 @@
           "p_over_pct": 67.1,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8475168,
@@ -187,8 +506,8 @@
           "p_over_pct": 67.0,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "loss",
+          "points_scored": 0
         },
         {
           "id": 8482699,
@@ -202,13 +521,13 @@
           "p_over_pct": 65.2,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "loss",
+          "points_scored": 0
         }
       ],
-      "success_rate": null,
-      "wins": 0,
-      "played": 0
+      "success_rate": 83.3,
+      "wins": 10,
+      "played": 12
     },
     {
       "date": "2026-03-15",
