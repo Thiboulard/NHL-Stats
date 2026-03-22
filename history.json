@@ -1,6 +1,325 @@
 {
   "days": [
     {
+      "date": "2026-03-22",
+      "matchups": [
+        "WPG vs NYR",
+        "COL vs WSH",
+        "CAR vs PIT",
+        "NSH vs CHI",
+        "CBJ vs NYI",
+        "VGK vs DAL",
+        "TBL vs CGY",
+        "BUF vs ANA",
+        "LAK vs UTA"
+      ],
+      "players": [
+        {
+          "id": 8476453,
+          "name": "Nikita Kucherov",
+          "team": "TBL",
+          "pos": "F",
+          "avg_points": 2.285,
+          "avg_toi": 20.3,
+          "expected": 2.2849,
+          "p_over": 0.8982,
+          "p_over_pct": 89.8,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8477492,
+          "name": "Nathan MacKinnon",
+          "team": "COL",
+          "pos": "F",
+          "avg_points": 1.572,
+          "avg_toi": 22.8,
+          "expected": 1.5722,
+          "p_over": 0.7924,
+          "p_over_pct": 79.2,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8478460,
+          "name": "Zach Werenski",
+          "team": "CBJ",
+          "pos": "D",
+          "avg_points": 1.354,
+          "avg_toi": 25.7,
+          "expected": 1.3542,
+          "p_over": 0.7418,
+          "p_over_pct": 74.2,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8480039,
+          "name": "Martin Necas",
+          "team": "COL",
+          "pos": "F",
+          "avg_points": 1.35,
+          "avg_toi": 22.5,
+          "expected": 1.3501,
+          "p_over": 0.7408,
+          "p_over_pct": 74.1,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8478550,
+          "name": "Artemi Panarin",
+          "team": "LAK",
+          "pos": "F",
+          "avg_points": 1.298,
+          "avg_toi": 20.9,
+          "expected": 1.2981,
+          "p_over": 0.7269,
+          "p_over_pct": 72.7,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8474578,
+          "name": "Erik Karlsson",
+          "team": "PIT",
+          "pos": "D",
+          "avg_points": 1.295,
+          "avg_toi": 23.6,
+          "expected": 1.2947,
+          "p_over": 0.726,
+          "p_over_pct": 72.6,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8476459,
+          "name": "Mika Zibanejad",
+          "team": "NYR",
+          "pos": "F",
+          "avg_points": 1.283,
+          "avg_toi": 21.3,
+          "expected": 1.2829,
+          "p_over": 0.7228,
+          "p_over_pct": 72.3,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8480027,
+          "name": "Jason Robertson",
+          "team": "DAL",
+          "pos": "F",
+          "avg_points": 1.25,
+          "avg_toi": 20.4,
+          "expected": 1.2504,
+          "p_over": 0.7136,
+          "p_over_pct": 71.4,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8479542,
+          "name": "Brandon Hagel",
+          "team": "TBL",
+          "pos": "F",
+          "avg_points": 1.214,
+          "avg_toi": 20.3,
+          "expected": 1.2136,
+          "p_over": 0.7029,
+          "p_over_pct": 70.3,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8480839,
+          "name": "Rasmus Dahlin",
+          "team": "BUF",
+          "pos": "D",
+          "avg_points": 1.213,
+          "avg_toi": 24.7,
+          "expected": 1.2129,
+          "p_over": 0.7027,
+          "p_over_pct": 70.3,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8478420,
+          "name": "Mikko Rantanen",
+          "team": "DAL",
+          "pos": "F",
+          "avg_points": 1.147,
+          "avg_toi": 20.1,
+          "expected": 1.1472,
+          "p_over": 0.6825,
+          "p_over_pct": 68.2,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8478519,
+          "name": "Anthony Cirelli",
+          "team": "TBL",
+          "pos": "F",
+          "avg_points": 1.137,
+          "avg_toi": 16.0,
+          "expected": 1.1365,
+          "p_over": 0.6791,
+          "p_over_pct": 67.9,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8476460,
+          "name": "Mark Scheifele",
+          "team": "WPG",
+          "pos": "F",
+          "avg_points": 1.131,
+          "avg_toi": 22.6,
+          "expected": 1.1312,
+          "p_over": 0.6774,
+          "p_over_pct": 67.7,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8478427,
+          "name": "Sebastian Aho",
+          "team": "CAR",
+          "pos": "F",
+          "avg_points": 1.12,
+          "avg_toi": 19.5,
+          "expected": 1.1197,
+          "p_over": 0.6736,
+          "p_over_pct": 67.4,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8478010,
+          "name": "Brayden Point",
+          "team": "TBL",
+          "pos": "F",
+          "avg_points": 1.116,
+          "avg_toi": 17.6,
+          "expected": 1.1164,
+          "p_over": 0.6725,
+          "p_over_pct": 67.2,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8482109,
+          "name": "Alexis Lafrenière",
+          "team": "NYR",
+          "pos": "F",
+          "avg_points": 1.092,
+          "avg_toi": 17.4,
+          "expected": 1.0923,
+          "p_over": 0.6646,
+          "p_over_pct": 66.5,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8478445,
+          "name": "Mathew Barzal",
+          "team": "NYI",
+          "pos": "F",
+          "avg_points": 1.081,
+          "avg_toi": 20.6,
+          "expected": 1.0812,
+          "p_over": 0.6608,
+          "p_over_pct": 66.1,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8476887,
+          "name": "Filip Forsberg",
+          "team": "NSH",
+          "pos": "F",
+          "avg_points": 1.07,
+          "avg_toi": 19.1,
+          "expected": 1.07,
+          "p_over": 0.657,
+          "p_over_pct": 65.7,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8484166,
+          "name": "Adam Fantilli",
+          "team": "CBJ",
+          "pos": "F",
+          "avg_points": 1.062,
+          "avg_toi": 19.0,
+          "expected": 1.0623,
+          "p_over": 0.6543,
+          "p_over_pct": 65.4,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        },
+        {
+          "id": 8475745,
+          "name": "Charlie Coyle",
+          "team": "CBJ",
+          "pos": "F",
+          "avg_points": 1.059,
+          "avg_toi": 18.6,
+          "expected": 1.0588,
+          "p_over": 0.6531,
+          "p_over_pct": 65.3,
+          "n_games": 27,
+          "goalie_adj": 0.0,
+          "result": null,
+          "points_scored": null
+        }
+      ],
+      "success_rate": null,
+      "wins": 0,
+      "played": 0
+    },
+    {
       "date": "2026-03-21",
       "matchups": [
         "WPG vs PIT",
@@ -28,8 +347,8 @@
           "p_over_pct": 89.0,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 4
         },
         {
           "id": 8477934,
@@ -43,7 +362,7 @@
           "p_over_pct": 79.1,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
+          "result": "no_game",
           "points_scored": null
         },
         {
@@ -58,8 +377,8 @@
           "p_over_pct": 76.0,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8480018,
@@ -73,8 +392,8 @@
           "p_over_pct": 74.5,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 4
         },
         {
           "id": 8477956,
@@ -88,8 +407,8 @@
           "p_over_pct": 74.2,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 2
         },
         {
           "id": 8478550,
@@ -103,8 +422,8 @@
           "p_over_pct": 73.7,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8480803,
@@ -118,8 +437,8 @@
           "p_over_pct": 72.6,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8479337,
@@ -133,8 +452,8 @@
           "p_over_pct": 72.0,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8480027,
@@ -148,8 +467,8 @@
           "p_over_pct": 71.9,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8476460,
@@ -163,8 +482,8 @@
           "p_over_pct": 71.1,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "loss",
+          "points_scored": 0
         },
         {
           "id": 8478460,
@@ -178,8 +497,8 @@
           "p_over_pct": 70.9,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 3
         },
         {
           "id": 8474578,
@@ -193,8 +512,8 @@
           "p_over_pct": 70.4,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 2
         },
         {
           "id": 8480839,
@@ -208,8 +527,8 @@
           "p_over_pct": 69.9,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8484801,
@@ -223,8 +542,8 @@
           "p_over_pct": 68.5,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8478420,
@@ -238,7 +557,7 @@
           "p_over_pct": 68.2,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
+          "result": "no_game",
           "points_scored": null
         },
         {
@@ -253,8 +572,8 @@
           "p_over_pct": 68.2,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8479542,
@@ -268,8 +587,8 @@
           "p_over_pct": 68.1,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 2
         },
         {
           "id": 8478445,
@@ -283,8 +602,8 @@
           "p_over_pct": 67.8,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "win",
+          "points_scored": 1
         },
         {
           "id": 8475745,
@@ -298,8 +617,8 @@
           "p_over_pct": 67.5,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "loss",
+          "points_scored": 0
         },
         {
           "id": 8478398,
@@ -313,13 +632,13 @@
           "p_over_pct": 67.3,
           "n_games": 27,
           "goalie_adj": 0.0,
-          "result": null,
-          "points_scored": null
+          "result": "loss",
+          "points_scored": 0
         }
       ],
-      "success_rate": null,
-      "wins": 0,
-      "played": 0
+      "success_rate": 83.3,
+      "wins": 15,
+      "played": 18
     },
     {
       "date": "2026-03-20",
